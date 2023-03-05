@@ -11,10 +11,10 @@ from .branch_config import BranchConfig
 
 class BranchCICDPipeline(Construct):
     def __init__(self, scope: Construct, branch_config: BranchConfig):
-        super().__init__(scope, "CICDStack")
+        super().__init__(scope, "BranchCICDPipeline")
 
         cache_bucket = s3.Bucket(
-            self,
+            scope,
             "CacheBucket",
             removal_policy=cdk.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
@@ -28,7 +28,7 @@ class BranchCICDPipeline(Construct):
         )
 
         self.cdk_pipeline = pipelines.CodePipeline(
-            self,
+            scope,
             "Pipeline",  # Pipeline name gets the stack name prepended
             synth=synth_step,
             code_build_defaults=pipelines.CodeBuildOptions(

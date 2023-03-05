@@ -27,7 +27,7 @@ class BranchCICDPipeline(Construct):
             commands=["./synth.sh"]
         )
 
-        cdk_pipeline = pipelines.CodePipeline(
+        self.cdk_pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",  # Pipeline name gets the stack name prepended
             synth=synth_step,
@@ -39,3 +39,6 @@ class BranchCICDPipeline(Construct):
             ),
             cross_account_keys=False
         )
+
+    def add_stage(self, stage: cdk.Stage) -> pipelines.StageDeployment:
+        return self.cdk_pipeline.add_stage(stage)

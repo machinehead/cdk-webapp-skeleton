@@ -6,12 +6,12 @@ from aws_cdk import (
 )
 from constructs import Construct
 
+from .branch_config import BranchConfig
 
-class BranchCICDStack(cdk.Stack):
-    def __init__(self, scope: Construct, source: pipelines.CodePipelineSource=None):
+
+class BranchCICDPipeline(Construct):
+    def __init__(self, scope: Construct, branch_config: BranchConfig):
         super().__init__(scope, "CICDStack")
-
-        assert source is not None
 
         cache_bucket = s3.Bucket(
             self,
@@ -22,10 +22,11 @@ class BranchCICDStack(cdk.Stack):
 
         synth_step = pipelines.ShellStep(
             "Synth",
-            input=source,
-            # env={"BRANCH": deploy_env.github_branch(), },
+            input=branch_config.source,
+            env={"BRANCH": branch_config.branch_name, },
             commands=["./synth.sh"]
         )
+
         cdk_pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",  # Pipeline name gets the stack name prepended

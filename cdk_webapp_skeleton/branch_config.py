@@ -32,3 +32,11 @@ class BranchConfig(ABC):
     @abc.abstractmethod
     def source(self) -> pipelines.CodePipelineSource:
         ...
+
+    def construct_id(self, id_: str):
+        """
+        Contextualizes constructs by environment.
+        :param id_: construct id
+        :return: ConstructId prefixed by the environment name (either "Prod" or branch name)
+        """
+        return f"{self._env_name}{id_}"

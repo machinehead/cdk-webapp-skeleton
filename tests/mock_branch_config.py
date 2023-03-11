@@ -8,7 +8,11 @@ from cdk_webapp_skeleton import BranchConfig
 
 class MockBranchConfig(BranchConfig):
     def __init__(self, branch_name: str):
-        super(MockBranchConfig, self).__init__(branch_name, domain_name_base="testing.com")
+        super(MockBranchConfig, self).__init__(branch_name)
+
+    @property
+    def domain_name_base(self) -> Optional[str]:
+        return "testing.com"
 
     @property
     def source(self):

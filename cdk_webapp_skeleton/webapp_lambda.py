@@ -29,12 +29,12 @@ class WebappLambda(Construct):
             environment=lambda_runtime_environment,
         )
 
-        root_hosted_zone = branch_config.get_hosted_zone(self)
+        root_hosted_zone = branch_config.get_hosted_zone(scope)
         if root_hosted_zone is not None:
             backend_domain_name = "api." + branch_config.domain_name
 
             backend_certificate = certificatemanager.Certificate(
-                self,
+                scope,
                 "apiCert",
                 domain_name=backend_domain_name,
                 validation=certificatemanager.CertificateValidation.from_dns(
@@ -49,7 +49,7 @@ class WebappLambda(Construct):
             )
 
             lambda_gateway = apigateway.LambdaRestApi(
-                self,
+                scope,
                 branch_config.construct_id("WebappBackendApi"),
                 handler=self.webapp_lambda_func,
                 domain_name=apigateway.DomainNameOptions(
@@ -60,7 +60,7 @@ class WebappLambda(Construct):
             )
 
             route53.ARecord(
-                self,
+                scope,
                 "BackendApiARecord",
                 zone=root_hosted_zone,
                 target=route53.RecordTarget.from_alias(

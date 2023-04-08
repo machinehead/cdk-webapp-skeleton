@@ -1,5 +1,6 @@
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
+from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_route53 as route53
 from aws_cdk import aws_route53_targets as route53_targets
@@ -27,6 +28,15 @@ class WebappLambda(Construct):
             "FlaskLambda",
             code=_lambda.DockerImageCode.from_image_asset(directory="webapp-backend"),
             environment=lambda_runtime_environment,
+        )
+
+        cloudwatch.Alarm(
+            scope,
+            "FlaskLambdaThrottles",
+            metric=self.webapp_lambda_func.metric_throttles(),
+            evaluation_periods=1,
+            threshold=0,
+            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
         )
 
         root_hosted_zone = branch_config.get_hosted_zone(scope)

@@ -2,6 +2,7 @@ from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
 from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_lambda as _lambda
+from aws_cdk import aws_logs as logs
 from aws_cdk import aws_route53 as route53
 from aws_cdk import aws_route53_targets as route53_targets
 from constructs import Construct
@@ -18,6 +19,7 @@ class WebappLambda(Construct):
         _id: str,
         branch_config: BranchConfig,
         lambda_runtime_environment=None,
+        image_directory="webapp-backend",
     ):
         super().__init__(scope, _id)
         if lambda_runtime_environment is None:
@@ -26,8 +28,18 @@ class WebappLambda(Construct):
         self.webapp_lambda_func = _lambda.DockerImageFunction(
             scope,
             "FlaskLambda",
-            code=_lambda.DockerImageCode.from_image_asset(directory="webapp-backend"),
+            code=_lambda.DockerImageCode.from_image_asset(directory=image_directory),
             environment=lambda_runtime_environment,
+        )
+
+        logs.MetricFilter(
+            scope,
+            "FlaskLambdaTimeouts",
+            log_group=self.webapp_lambda_func.log_group,
+            filter_pattern=logs.FilterPattern.literal("Task timed out"),
+            metric_name="Timeouts",
+            metric_namespace="FlaskLambda",
+            metric_value="1",
         )
 
         cloudwatch.Alarm(

@@ -79,6 +79,9 @@ class WebappLambda(Construct):
                 ),
                 disable_execute_api_endpoint=True,
                 default_cors_preflight_options=cors_options,
+                deploy_options=apigateway.StageOptions(
+                    tracing_enabled=True,
+                ),
             )
 
             route53.ARecord(

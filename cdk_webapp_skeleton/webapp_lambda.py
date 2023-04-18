@@ -45,6 +45,7 @@ class WebappLambda(Construct):
             environment=lambda_runtime_environment,
             tracing=_lambda.Tracing.ACTIVE,
         )
+        profiling_group.grant_publish(self.webapp_lambda_func)
 
         logs.MetricFilter(
             scope,

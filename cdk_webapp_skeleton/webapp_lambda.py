@@ -36,10 +36,12 @@ class WebappLambda(Construct):
             scope,
             "FlaskLambdaTimeouts",
             log_group=self.webapp_lambda_func.log_group,
-            filter_pattern=logs.FilterPattern.literal("Task timed out"),
+            filter_pattern=logs.FilterPattern.literal('"Task timed out"'),
             metric_name="Timeouts",
             metric_namespace="FlaskLambda",
             metric_value="1",
+            default_value=0,
+            unit=cloudwatch.Unit.COUNT,
         )
 
         cloudwatch.Alarm(

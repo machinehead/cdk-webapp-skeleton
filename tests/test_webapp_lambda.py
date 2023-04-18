@@ -29,5 +29,5 @@ def test_webapp_lambda():
             }
         },
     )
-    template.resource_count_is("AWS::CloudWatch::Alarm", 1)
+    template.resource_count_is("AWS::CloudWatch::Alarm", 2)
     template.resource_count_is("AWS::Logs::MetricFilter", 1)

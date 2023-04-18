@@ -54,6 +54,15 @@ class WebappLambda(Construct):
             comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
         )
 
+        cloudwatch.Alarm(
+            scope,
+            "FlaskLambdaErrors",
+            metric=self.webapp_lambda_func.metric_errors(),
+            evaluation_periods=1,
+            threshold=0,
+            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+        )
+
         root_hosted_zone = branch_config.get_hosted_zone(scope)
         if root_hosted_zone is not None:
             backend_domain_name = "api." + branch_config.domain_name

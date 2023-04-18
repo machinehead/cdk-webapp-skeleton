@@ -30,6 +30,7 @@ class WebappLambda(Construct):
             "FlaskLambda",
             code=_lambda.DockerImageCode.from_image_asset(directory=image_directory),
             environment=lambda_runtime_environment,
+            tracing=_lambda.Tracing.ACTIVE,
         )
 
         logs.MetricFilter(

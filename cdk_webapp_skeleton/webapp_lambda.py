@@ -1,3 +1,5 @@
+from typing import Optional
+
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
 from aws_cdk import aws_cloudwatch as cloudwatch
@@ -19,8 +21,9 @@ class WebappLambda(Construct):
         scope: "Construct",
         _id: str,
         branch_config: BranchConfig,
-        lambda_runtime_environment=None,
         image_directory="webapp-backend",
+        lambda_runtime_environment=None,
+        memory_size: Optional[int] = 256,
     ):
         super().__init__(scope, _id)
         if lambda_runtime_environment is None:
@@ -43,6 +46,7 @@ class WebappLambda(Construct):
             "FlaskLambda",
             code=_lambda.DockerImageCode.from_image_asset(directory=image_directory),
             environment=lambda_runtime_environment,
+            memory_size=memory_size,
             tracing=_lambda.Tracing.ACTIVE,
         )
         profiling_group.grant_publish(self.webapp_lambda_func)

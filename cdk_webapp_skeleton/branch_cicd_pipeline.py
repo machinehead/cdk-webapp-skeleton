@@ -38,6 +38,7 @@ class BranchCICDPipeline(Construct):
                 cache=codebuild.Cache.bucket(cache_bucket),
             ),
             cross_account_keys=False,
+            publish_assets_in_parallel=False,
         )
 
     def add_stage(self, stage: cdk.Stage) -> pipelines.StageDeployment:

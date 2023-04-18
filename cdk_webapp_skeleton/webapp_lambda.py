@@ -1,6 +1,7 @@
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
 from aws_cdk import aws_cloudwatch as cloudwatch
+from aws_cdk import aws_codeguruprofiler as codeguruprofiler
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
 from aws_cdk import aws_route53 as route53
@@ -24,6 +25,18 @@ class WebappLambda(Construct):
         super().__init__(scope, _id)
         if lambda_runtime_environment is None:
             lambda_runtime_environment = {}
+
+        profiling_group = codeguruprofiler.ProfilingGroup(
+            scope,
+            "FlaskLambdaProfiler",
+            compute_platform=codeguruprofiler.ComputePlatform.AWS_LAMBDA,
+        )
+
+        lambda_runtime_environment.update(
+            {
+                "AWS_CODEGURU_PROFILER_GROUP_ARN": profiling_group.profiling_group_arn,
+            }
+        )
 
         self.webapp_lambda_func = _lambda.DockerImageFunction(
             scope,

@@ -20,6 +20,7 @@ class WebappLambdaTestStack(cdk.Stack):
 
 def test_webapp_lambda():
     template = assertions.Template.from_stack(WebappLambdaTestStack())
+    # pprint(template.to_json())
     template.resource_count_is("AWS::Lambda::Function", 2)
     template.has_resource(
         "AWS::Lambda::Function",

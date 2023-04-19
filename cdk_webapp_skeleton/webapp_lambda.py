@@ -78,7 +78,8 @@ class WebappLambda(Construct):
                 domain_name=apigateway.DomainNameOptions(
                     domain_name=backend_domain_name, certificate=backend_certificate
                 ),
-                disable_execute_api_endpoint=True,
+                # Used by the RestApiWarmup event rule below.
+                disable_execute_api_endpoint=False,
                 default_cors_preflight_options=cors_options,
                 deploy_options=apigateway.StageOptions(
                     tracing_enabled=True,

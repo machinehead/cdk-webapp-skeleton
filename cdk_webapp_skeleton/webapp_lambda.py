@@ -1,9 +1,12 @@
 from typing import Optional
 
+import aws_cdk as cdk
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
 from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_codeguruprofiler as codeguruprofiler
+from aws_cdk import aws_events as events
+from aws_cdk import aws_events_targets as events_targets
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
 from aws_cdk import aws_route53 as route53
@@ -112,6 +115,13 @@ class WebappLambda(Construct):
                 deploy_options=apigateway.StageOptions(
                     tracing_enabled=True,
                 ),
+            )
+
+            events.Rule(
+                self,
+                "RestApiWarmup",
+                targets=[events_targets.ApiGateway(lambda_gateway, path="/")],
+                schedule=events.Schedule.rate(cdk.Duration.minutes(1)),
             )
 
             route53.ARecord(

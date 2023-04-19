@@ -1,5 +1,6 @@
 from typing import Dict, Optional
 
+import aws_cdk as cdk
 from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_codeguruprofiler as codeguruprofiler
 from aws_cdk import aws_lambda as _lambda
@@ -15,6 +16,7 @@ class MonitoredLambdaFunction(Construct):
         code: _lambda.DockerImageCode = None,
         lambda_runtime_environment: Optional[Dict] = None,
         memory_size: Optional[int] = 256,
+        timeout: Optional[cdk.Duration] = None,
     ):
         super().__init__(scope, _id + "Monitor")
         if lambda_runtime_environment is None:
@@ -39,8 +41,10 @@ class MonitoredLambdaFunction(Construct):
             _id,
             code=code,
             environment=lambda_runtime_environment,
+            log_retention=logs.RetentionDays.TWO_WEEKS,
             memory_size=memory_size,
             tracing=_lambda.Tracing.ACTIVE,
+            timeout=timeout,
         )
 
         profiling_group.grant_publish(self.lambda_function)

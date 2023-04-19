@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cdk-webapp-skeleton"
-version = "0.3.dev12"
+version = "0.3.dev13"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
 readme = "README.md"

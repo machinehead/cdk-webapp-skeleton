@@ -28,7 +28,7 @@ class WebappLambda(Construct):
         lambda_runtime_environment=None,
         memory_size: Optional[int] = 256,
     ):
-        super().__init__(scope, _id)
+        super().__init__(scope, branch_config.construct_id(_id) + "Construct")
 
         if code is None:
             assert image_directory is not None
@@ -45,7 +45,7 @@ class WebappLambda(Construct):
 
         self.monitored_lambda = MonitoredLambdaFunction(
             scope,
-            branch_config.construct_id("FlaskLambda"),
+            branch_config.construct_id(_id),
             code=code,
             lambda_runtime_environment=lambda_runtime_environment,
             memory_size=memory_size,

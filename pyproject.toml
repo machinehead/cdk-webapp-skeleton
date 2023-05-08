@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cdk-webapp-skeleton"
-version = "0.3.dev14"
+version = "0.3.dev15"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
 readme = "README.md"
@@ -21,7 +21,11 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--cov=. --cov-report html"
+addopts = "--cov=. --cov-report html --cov-config=.coveragerc"
 markers = [
     "branch_name",
 ]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

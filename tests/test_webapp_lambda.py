@@ -32,3 +32,20 @@ def test_webapp_lambda():
     )
     template.resource_count_is("AWS::CloudWatch::Alarm", 2)
     template.resource_count_is("AWS::Logs::MetricFilter", 1)
+    # FlaskLambda warmup rule
+    template.has_resource(
+        "AWS::Events::Rule",
+        {
+            "Properties": {
+                "ScheduleExpression": "rate(1 minute)",
+                "Targets": [
+                    {
+                        "HttpParameters": {},
+                        "Id": "Target0",
+                        # Make sure that if the lambda fails, a retry storm doesn't happen
+                        "RetryPolicy": {"MaximumRetryAttempts": 0},
+                    }
+                ],
+            },
+        },
+    )

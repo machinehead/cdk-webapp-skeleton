@@ -89,7 +89,7 @@ class WebappLambda(Construct):
             events.Rule(
                 scope,
                 "RestApiWarmup",
-                targets=[events_targets.ApiGateway(lambda_gateway)],
+                targets=[events_targets.ApiGateway(lambda_gateway, retry_attempts=0)],
                 schedule=events.Schedule.rate(cdk.Duration.minutes(1)),
             )
 

@@ -22,7 +22,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--cov=. --cov-report html --cov-config=.coveragerc"
+addopts = "--cov=. --cov-report html --cov-report xml --cov-config=.coveragerc"
 markers = [
     "branch_name",
 ]

@@ -1,11 +1,19 @@
 # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+# https://github.com/codecov/codecov-action
+# https://github.com/snok/install-poetry
+# https://github.com/marketplace/actions/pypi-publish
 
 name: Publish to PyPI
 on: push
 
 jobs:
-  deploy:
+  build-n-publish:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/cdk-webapp-skeleton
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.8
@@ -21,4 +29,4 @@ jobs:
       - name: Build package
         run: poetry build
       - name: Publish package to PyPI
-        run: poetry publish
+        uses: pypa/gh-action-pypi-publish@release/v1

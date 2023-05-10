@@ -1,0 +1,18 @@
+# https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+
+name: Publish to PyPI
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+      - name: Install dependencies
+        run: poetry install

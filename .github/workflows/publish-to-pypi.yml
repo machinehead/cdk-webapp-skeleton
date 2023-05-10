@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.8
+        id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
@@ -29,8 +30,17 @@ jobs:
       - name: Install Poetry if not cached
         if: steps.cached-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
+      - name: Load cached venv
+        id: cached-venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
-        run: poetry install
+        if: steps.cached-venv.outputs.cache-hit != 'true'
+        run: poetry install --no-root
       - name: Run tests
         run: poetry run pytest
       - name: Upload coverage reports to Codecov

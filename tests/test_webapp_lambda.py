@@ -1,5 +1,6 @@
 import aws_cdk as cdk
 from aws_cdk import assertions
+from aws_cdk import aws_lambda as _lambda
 
 from cdk_webapp_skeleton import WebappLambda
 
@@ -14,7 +15,9 @@ class WebappLambdaTestStack(cdk.Stack):
             self,
             "WebappLambda",
             MockBranchConfig("main"),
-            image_directory="tests/lambda_image",
+            code=_lambda.DockerImageCode.from_image_asset(
+                directory="tests/lambda_image"
+            ),
         )
 
 

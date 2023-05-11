@@ -31,19 +31,20 @@ class WebappLambda(Construct):
         super().__init__(scope, branch_config.construct_id(_id) + "Construct")
 
         warn_stacklevel = 3
-        if image_directory is None and code is None:
-            warnings.warn(
-                'image_directory defaults to "webapp-backend", but this will be deprecated in favor of "code"',
-                DeprecationWarning,
-                stacklevel=warn_stacklevel,
-            )
-            image_directory = "webapp-backend"
         if code is None:
-            warnings.warn(
-                '"image_directory" will be deprecated in favor of "code"',
-                DeprecationWarning,
-                stacklevel=warn_stacklevel,
-            )
+            if image_directory is None:
+                warnings.warn(
+                    'image_directory defaults to "webapp-backend", but this will be deprecated in favor of "code"',
+                    DeprecationWarning,
+                    stacklevel=warn_stacklevel,
+                )
+                image_directory = "webapp-backend"
+            else:
+                warnings.warn(
+                    '"image_directory" will be deprecated in favor of "code"',
+                    DeprecationWarning,
+                    stacklevel=warn_stacklevel,
+                )
             code = _lambda.DockerImageCode.from_image_asset(directory=image_directory)
         else:
             if image_directory is not None:

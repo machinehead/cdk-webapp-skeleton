@@ -24,23 +24,33 @@ class WebappLambda(Construct):
         _id: str,
         branch_config: BranchConfig,
         code: _lambda.DockerImageCode = None,
-        image_directory="webapp-backend",
+        image_directory=None,
         lambda_runtime_environment=None,
         memory_size: Optional[int] = 256,
     ):
         super().__init__(scope, branch_config.construct_id(_id) + "Construct")
 
-        if code is None:
-            assert image_directory is not None
+        warn_stacklevel = 3
+        if image_directory is None and code is None:
             warnings.warn(
-                "image_directory will be deprecated in favor of code",
+                'image_directory defaults to "webapp-backend", but this will be deprecated in favor of "code"',
                 DeprecationWarning,
+                stacklevel=warn_stacklevel,
+            )
+            image_directory = "webapp-backend"
+        if code is None:
+            warnings.warn(
+                '"image_directory" will be deprecated in favor of "code"',
+                DeprecationWarning,
+                stacklevel=warn_stacklevel,
             )
             code = _lambda.DockerImageCode.from_image_asset(directory=image_directory)
         else:
             if image_directory is not None:
                 warnings.warn(
-                    "image_directory is ignored when code is specified", RuntimeWarning
+                    "image_directory is ignored when code is specified",
+                    RuntimeWarning,
+                    stacklevel=warn_stacklevel,
                 )
 
         self.monitored_lambda = MonitoredLambdaFunction(

@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import aws_cdk as cdk
 from aws_cdk import assertions
 from aws_cdk import aws_lambda as _lambda
@@ -23,7 +25,7 @@ class WebappLambdaTestStack(cdk.Stack):
 
 def test_webapp_lambda():
     template = assertions.Template.from_stack(WebappLambdaTestStack())
-    # pprint(template.to_json())
+    pprint(template.to_json())
     template.resource_count_is("AWS::Lambda::Function", 2)
     template.has_resource(
         "AWS::Lambda::Function",
@@ -33,7 +35,49 @@ def test_webapp_lambda():
             }
         },
     )
-    template.resource_count_is("AWS::CloudWatch::Alarm", 2)
+    template.has_resource(
+        "AWS::CloudWatch::Alarm",
+        {
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Name": "FunctionName",
+                        "Value": {"Ref": "ProdWebappLambdaB7300C0B"},
+                    }
+                ],
+                "EvaluationPeriods": 1,
+                "MetricName": "Throttles",
+                "Namespace": "AWS/Lambda",
+                "Period": 300,
+                "Statistic": "Sum",
+                "Threshold": 0,
+                "TreatMissingData": "ignore",
+            },
+        },
+    )
+    template.has_resource(
+        "AWS::CloudWatch::Alarm",
+        {
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Name": "FunctionName",
+                        "Value": {"Ref": "ProdWebappLambdaB7300C0B"},
+                    }
+                ],
+                "EvaluationPeriods": 1,
+                "MetricName": "Errors",
+                "Namespace": "AWS/Lambda",
+                "Period": 300,
+                "Statistic": "Sum",
+                "Threshold": 0,
+                "TreatMissingData": "ignore",
+            },
+        },
+    )
+
     template.resource_count_is("AWS::Logs::MetricFilter", 1)
     # FlaskLambda warmup rule
     template.has_resource(

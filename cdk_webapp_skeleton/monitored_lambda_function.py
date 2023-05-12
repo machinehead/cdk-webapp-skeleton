@@ -68,6 +68,7 @@ class MonitoredLambdaFunction(Construct):
             evaluation_periods=1,
             threshold=0,
             comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )
 
         cloudwatch.Alarm(
@@ -77,4 +78,5 @@ class MonitoredLambdaFunction(Construct):
             evaluation_periods=1,
             threshold=0,
             comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )

@@ -49,9 +49,9 @@ class MonitoredLambdaFunction(Construct):
 
         profiling_group.grant_publish(self.lambda_function)
 
-        logs.MetricFilter(
+        timeouts_metric_filter = logs.MetricFilter(
             scope,
-            _id + "Timeouts",
+            _id + "TimeoutsMetricFilter",
             log_group=self.lambda_function.log_group,
             filter_pattern=logs.FilterPattern.literal('"Task timed out"'),
             metric_name="Timeouts",
@@ -75,6 +75,16 @@ class MonitoredLambdaFunction(Construct):
             scope,
             _id + "Errors",
             metric=self.lambda_function.metric_errors(),
+            evaluation_periods=1,
+            threshold=0,
+            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
+        )
+
+        cloudwatch.Alarm(
+            scope,
+            _id + "Timeouts",
+            metric=timeouts_metric_filter.metric(statistic=cloudwatch.Stats.SUM),
             evaluation_periods=1,
             threshold=0,
             comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,

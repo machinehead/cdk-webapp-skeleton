@@ -35,6 +35,8 @@ def test_webapp_lambda():
             }
         },
     )
+
+    template.resource_count_is("AWS::CloudWatch::Alarm", 3)
     template.has_resource(
         "AWS::CloudWatch::Alarm",
         {
@@ -77,8 +79,24 @@ def test_webapp_lambda():
             },
         },
     )
+    template.has_resource(
+        "AWS::CloudWatch::Alarm",
+        {
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "EvaluationPeriods": 1,
+                "MetricName": "Timeouts",
+                "Namespace": "ProdWebappLambda",
+                "Period": 300,
+                "Statistic": "Sum",
+                "Threshold": 0,
+                "TreatMissingData": "ignore",
+            },
+        },
+    )
 
     template.resource_count_is("AWS::Logs::MetricFilter", 1)
+
     # FlaskLambda warmup rule
     template.has_resource(
         "AWS::Events::Rule",

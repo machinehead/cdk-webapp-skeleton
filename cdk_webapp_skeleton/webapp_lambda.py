@@ -9,6 +9,7 @@ from aws_cdk import aws_events_targets as events_targets
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_route53 as route53
 from aws_cdk import aws_route53_targets as route53_targets
+from aws_cdk import aws_sns as sns
 from constructs import Construct
 
 from .branch_config import BranchConfig
@@ -27,6 +28,7 @@ class WebappLambda(Construct):
         image_directory=None,
         lambda_runtime_environment=None,
         memory_size: Optional[int] = 256,
+        alarm_topic: Optional[sns.ITopic] = None,
     ):
         super().__init__(scope, branch_config.construct_id(_id) + "Construct")
 
@@ -60,6 +62,7 @@ class WebappLambda(Construct):
             code=code,
             lambda_runtime_environment=lambda_runtime_environment,
             memory_size=memory_size,
+            alarm_topic=alarm_topic,
         )
         self.webapp_lambda_func = self.monitored_lambda.lambda_function
 

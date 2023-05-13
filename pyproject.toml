@@ -41,6 +41,8 @@ major_version_zero = true
 
 [tool.poetry-dynamic-versioning]
 enable = true
+# TODO: extract version from `cz bump` so that when there's a MINOR/MAJOR change coming, the dev version corresponds
+#  to the next MINOR/MAJOR version
 format-jinja = """
     {%- if distance == 0 -%}
         {{ serialize_pep440(base, stage, revision) }}

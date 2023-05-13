@@ -2,9 +2,11 @@ from typing import Dict, Optional
 
 import aws_cdk as cdk
 from aws_cdk import aws_cloudwatch as cloudwatch
+from aws_cdk import aws_cloudwatch_actions as cloudwatch_actions
 from aws_cdk import aws_codeguruprofiler as codeguruprofiler
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
+from aws_cdk import aws_sns as sns
 from constructs import Construct
 
 
@@ -17,6 +19,7 @@ class MonitoredLambdaFunction(Construct):
         lambda_runtime_environment: Optional[Dict] = None,
         memory_size: Optional[int] = 256,
         timeout: Optional[cdk.Duration] = None,
+        alarm_topic: Optional[sns.ITopic] = None,
     ):
         super().__init__(scope, _id + "Monitor")
         if lambda_runtime_environment is None:
@@ -61,7 +64,7 @@ class MonitoredLambdaFunction(Construct):
             unit=cloudwatch.Unit.COUNT,
         )
 
-        cloudwatch.Alarm(
+        throttles_alarm = cloudwatch.Alarm(
             scope,
             _id + "Throttles",
             metric=self.lambda_function.metric_throttles(),
@@ -71,7 +74,7 @@ class MonitoredLambdaFunction(Construct):
             treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )
 
-        cloudwatch.Alarm(
+        errors_alarm = cloudwatch.Alarm(
             scope,
             _id + "Errors",
             metric=self.lambda_function.metric_errors(),
@@ -81,7 +84,7 @@ class MonitoredLambdaFunction(Construct):
             treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )
 
-        cloudwatch.Alarm(
+        timeouts_alarm = cloudwatch.Alarm(
             scope,
             _id + "Timeouts",
             metric=timeouts_metric_filter.metric(statistic=cloudwatch.Stats.SUM),
@@ -90,3 +93,8 @@ class MonitoredLambdaFunction(Construct):
             comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
             treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )
+
+        if alarm_topic is not None:
+            throttles_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
+            errors_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
+            timeouts_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))

@@ -1,10 +1,8 @@
 import aws_cdk as cdk
 import pytest
+from aws_cdk import assertions
 
 from cdk_webapp_skeleton import BranchCICDPipeline, BranchConfig
-from aws_cdk import (
-    assertions,
-)
 
 from .mock_branch_config import MockBranchConfig
 
@@ -17,7 +15,8 @@ def testing_branch_config():
 def test_branch_cicd_pipeline(testing_branch_config: BranchConfig):
     app = cdk.App()
     stack = cdk.Stack(app, "CICDStack")
-    BranchCICDPipeline(stack, testing_branch_config)
+    pipeline = BranchCICDPipeline(stack, testing_branch_config)
+    pipeline.build_pipeline()
     template = assertions.Template.from_stack(stack)
 
     # PipelineArtifactsBucket

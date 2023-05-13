@@ -1,6 +1,9 @@
 import aws_cdk as cdk
 from aws_cdk import aws_codebuild as codebuild
+from aws_cdk import aws_codestarnotifications as codestarnotifications
 from aws_cdk import aws_s3 as s3
+from aws_cdk import aws_sns as sns
+from aws_cdk import aws_sns_subscriptions as subscriptions
 from aws_cdk import pipelines as pipelines
 from constructs import Construct
 
@@ -41,8 +44,20 @@ class BranchCICDPipeline(Construct):
             publish_assets_in_parallel=False,
         )
 
+        self.alarm_topic = sns.Topic(self, "AlarmTopic")
+        if branch_config.notify_email is not None:
+            self.alarm_topic.add_subscription(
+                subscriptions.EmailSubscription(branch_config.notify_email)
+            )
+
     def add_stage(self, stage: cdk.Stage) -> pipelines.StageDeployment:
         return self.cdk_pipeline.add_stage(stage)
 
     def build_pipeline(self):
         self.cdk_pipeline.build_pipeline()
+
+        self.cdk_pipeline.pipeline.notify_on_execution_state_change(
+            "PipelineNotify",
+            self.alarm_topic,
+            detail_type=codestarnotifications.DetailType.FULL,
+        )

@@ -2,11 +2,8 @@ import abc
 from abc import ABC
 from typing import Optional
 
-from aws_cdk import (
-    pipelines as pipelines,
-    aws_route53 as route53,
-)
-
+from aws_cdk import aws_route53 as route53
+from aws_cdk import pipelines as pipelines
 from constructs import Construct
 
 
@@ -19,7 +16,9 @@ class BranchConfig(ABC):
         domain = branch_name.replace("_", "-")
         self._env_name = "Prod" if branch_name == self.main_branch_name else domain
         self._branch_name = branch_name
-        self._domain_prefix = "" if branch_name == self.main_branch_name else f"{domain}."
+        self._domain_prefix = (
+            "" if branch_name == self.main_branch_name else f"{domain}."
+        )
 
     @property
     @abc.abstractmethod
@@ -73,3 +72,8 @@ class BranchConfig(ABC):
     @property
     def auth_domain_name(self):
         return f"auth.{self.domain_name_base}"
+
+    @property
+    def notify_email(self) -> Optional[str]:
+        """Email address to send deploy and alarm notifications to."""
+        return None

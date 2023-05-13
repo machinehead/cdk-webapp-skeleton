@@ -83,7 +83,7 @@ class MonitoredLambdaFunction(Construct):
 
         cloudwatch.Alarm(
             scope,
-            _id + "Timeouts",
+            _id + "TimeoutsAlarm",
             metric=timeouts_metric_filter.metric(statistic=cloudwatch.Stats.SUM),
             evaluation_periods=1,
             threshold=0,

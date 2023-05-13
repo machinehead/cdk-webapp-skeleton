@@ -77,7 +77,7 @@ class WebsiteDeployStep(Construct):
         construct_id: str,
         branch_config: BranchConfig,
         commands: Sequence[str],
-        env_from_cfn_outputs=Optional[Mapping[str, cdk.CfnOutput]],
+        env_from_cfn_outputs: Optional[Mapping[str, cdk.CfnOutput]] = None,
     ):
         super().__init__(scope, construct_id)
 

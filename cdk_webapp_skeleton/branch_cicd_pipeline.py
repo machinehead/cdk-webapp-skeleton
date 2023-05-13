@@ -44,7 +44,7 @@ class BranchCICDPipeline(Construct):
             publish_assets_in_parallel=False,
         )
 
-        self.alarm_topic = sns.Topic(self, "AlarmTopic")
+        self.alarm_topic = sns.Topic(scope, "AlarmTopic")
         if branch_config.notify_email is not None:
             self.alarm_topic.add_subscription(
                 subscriptions.EmailSubscription(branch_config.notify_email)

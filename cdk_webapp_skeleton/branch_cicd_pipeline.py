@@ -21,6 +21,13 @@ class BranchCICDPipeline(Construct):
             auto_delete_objects=True,
         )
 
+        artifact_bucket = s3.Bucket(
+            scope,
+            "ArtifactBucket",
+            removal_policy=cdk.RemovalPolicy.DESTROY,
+            auto_delete_objects=True,
+        )
+
         synth_step = pipelines.ShellStep(
             "Synth",
             input=branch_config.source,
@@ -34,6 +41,7 @@ class BranchCICDPipeline(Construct):
             scope,
             "Pipeline",  # Pipeline name gets the stack name prepended
             synth=synth_step,
+            artifact_bucket=artifact_bucket,
             code_build_defaults=pipelines.CodeBuildOptions(
                 build_environment=codebuild.BuildEnvironment(
                     compute_type=codebuild.ComputeType.SMALL

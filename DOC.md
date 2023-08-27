@@ -1,5 +1,5 @@
 # Gotchas:
-- Needs `synth.sh` at project root folder.
+- CICD needs `synth.sh` at project root folder.
 
 # Operations
 
@@ -7,5 +7,4 @@
   - `poetry run pytest`
 - Publish
   - `poetry publish --build`
-- 
-
+-

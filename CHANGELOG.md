@@ -1,3 +1,16 @@
+## v0.5.0 (2023-09-03)
+
+### Feat
+
+- **lambdas**: enable passing alarm_topic to subscribe to alarms via SNS
+- **BranchCICDPipeline**: send email notifications about execution state change
+
+### Fix
+
+- **BranchCICDPipeline**: create custom artifacts bucket so that it gets deleted on pipeline deletion
+- **BranchCICDPipeline**: update the scope of the AlarmTopic to match the rest of resources
+- **WebsiteDeployStep**: fix incorrect assignment of type as default value to env_from_cfn_outputs
+
 ## v0.4.0 (2023-05-12)
 
 ### Feat

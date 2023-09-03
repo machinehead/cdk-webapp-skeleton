@@ -21,6 +21,16 @@ class MonitoredLambdaFunction(Construct):
         timeout: Optional[cdk.Duration] = None,
         alarm_topic: Optional[sns.ITopic] = None,
     ):
+        """
+
+        :param scope:
+        :param _id:
+        :param code:
+        :param lambda_runtime_environment:
+        :param memory_size:
+        :param timeout: Lambda timeout; default: Duration.seconds(3)
+        :param alarm_topic:
+        """
         super().__init__(scope, _id + "Monitor")
         if lambda_runtime_environment is None:
             lambda_runtime_environment = {}

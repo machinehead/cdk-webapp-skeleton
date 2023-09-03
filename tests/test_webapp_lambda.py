@@ -20,6 +20,7 @@ class WebappLambdaTestStack(cdk.Stack):
             code=_lambda.DockerImageCode.from_image_asset(
                 directory="tests/lambda_image"
             ),
+            timeout=cdk.Duration.seconds(4),
         )
 
 
@@ -29,11 +30,7 @@ def test_webapp_lambda():
     template.resource_count_is("AWS::Lambda::Function", 2)
     template.has_resource(
         "AWS::Lambda::Function",
-        {
-            "Properties": {
-                "PackageType": "Image",
-            }
-        },
+        {"Properties": {"PackageType": "Image", "MemorySize": 256, "Timeout": 4}},
     )
 
     template.resource_count_is("AWS::CloudWatch::Alarm", 3)

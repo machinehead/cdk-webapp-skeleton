@@ -29,7 +29,21 @@ class WebappLambda(Construct):
         lambda_runtime_environment=None,
         memory_size: Optional[int] = 256,
         alarm_topic: Optional[sns.ITopic] = None,
+        *,
+        timeout: Optional[cdk.Duration] = None,
     ):
+        """
+
+        :param scope:
+        :param _id:
+        :param branch_config:
+        :param code:
+        :param image_directory:
+        :param lambda_runtime_environment:
+        :param memory_size:
+        :param alarm_topic:
+        :param timeout: Lambda timeout; default: Duration.seconds(3)
+        """
         super().__init__(scope, branch_config.construct_id(_id) + "Construct")
 
         warn_stacklevel = 3
@@ -63,6 +77,7 @@ class WebappLambda(Construct):
             lambda_runtime_environment=lambda_runtime_environment,
             memory_size=memory_size,
             alarm_topic=alarm_topic,
+            timeout=timeout,
         )
         self.webapp_lambda_func = self.monitored_lambda.lambda_function
 

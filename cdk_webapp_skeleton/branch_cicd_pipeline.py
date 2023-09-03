@@ -44,7 +44,8 @@ class BranchCICDPipeline(Construct):
             artifact_bucket=artifact_bucket,
             code_build_defaults=pipelines.CodeBuildOptions(
                 build_environment=codebuild.BuildEnvironment(
-                    compute_type=codebuild.ComputeType.SMALL
+                    compute_type=codebuild.ComputeType.SMALL,
+                    build_image=codebuild.LinuxBuildImage.STANDARD_7_0,
                 ),
                 cache=codebuild.Cache.bucket(cache_bucket),
             ),

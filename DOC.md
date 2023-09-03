@@ -5,6 +5,7 @@
 
 - Run tests
   - `poetry run pytest`
-- Publish
-  - `poetry publish --build`
+- Bump version
+  - `cz bump`
+  - WARNING: this auto-commits the new version (but doesn't push)
 -

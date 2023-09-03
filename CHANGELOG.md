@@ -1,3 +1,9 @@
+## v0.5.1 (2023-09-03)
+
+### Fix
+
+- **BranchCICDPipeline**: move build image to Standard 7 to support Python 3.11
+
 ## v0.5.0 (2023-09-03)
 
 ### Feat

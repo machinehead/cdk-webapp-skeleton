@@ -2,12 +2,10 @@ from dataclasses import dataclass
 from typing import Optional
 
 import aws_cdk as cdk
-from aws_cdk import (
-    aws_cognito as cognito,
-    aws_certificatemanager as certificatemanager,
-    aws_route53 as route53,
-    aws_ssm as ssm
-)
+from aws_cdk import aws_certificatemanager as certificatemanager
+from aws_cdk import aws_cognito as cognito
+from aws_cdk import aws_route53 as route53
+from aws_cdk import aws_ssm as ssm
 from constructs import Construct
 
 from .branch_config import BranchConfig
@@ -23,13 +21,15 @@ class AuthStackOutputs(object):
 
 class AuthStack(cdk.Stack):
     def __init__(
-            self,
-            scope: Construct,
-            branch_config: BranchConfig,
-            user_pool_name: Optional[str] = None,
-            **kwargs
+        self,
+        scope: Construct,
+        branch_config: BranchConfig,
+        user_pool_name: Optional[str] = None,
+        **kwargs,
     ) -> None:
-        super().__init__(scope, "AuthStack", **kwargs, stack_name=branch_config.auth_stack_name())
+        super().__init__(
+            scope, "AuthStack", **kwargs, stack_name=branch_config.auth_stack_name()
+        )
         self._user_pool_name = user_pool_name
 
         if branch_config.build_user_pool:
@@ -44,30 +44,24 @@ class AuthStack(cdk.Stack):
             "app-client",
             generate_secret=False,
             o_auth=cognito.OAuthSettings(
-                callback_urls=[
-                    development_signin_url,
-                    production_signin_url
-                ]
-            )
+                callback_urls=[development_signin_url, production_signin_url]
+            ),
+            access_token_validity=cdk.Duration.days(1),
+            refresh_token_validity=cdk.Duration.days(30),
         )
 
         self.outputs = AuthStackOutputs(
-            cdk.CfnOutput(
-                self,
-                "UserPoolId",
-                value=user_pool.user_pool_id
-            ),
+            cdk.CfnOutput(self, "UserPoolId", value=user_pool.user_pool_id),
             cdk.CfnOutput(
                 self,
                 "UserPoolFrontClientId",
-                value=frontend_pool_client.user_pool_client_id
-            )
+                value=frontend_pool_client.user_pool_client_id,
+            ),
         )
 
     def find_user_pool(self):
         user_pool_arn = ssm.StringParameter.value_for_string_parameter(
-            self,
-            parameter_name=USER_POOL_ARN_PARAM
+            self, parameter_name=USER_POOL_ARN_PARAM
         )
         return cognito.UserPool.from_user_pool_arn(self, "UserPool", user_pool_arn)
 
@@ -85,28 +79,32 @@ class AuthStack(cdk.Stack):
         if root_hosted_zone is not None:
             auth_domain_certificate = certificatemanager.Certificate(
                 self,
-                'apiCert',
+                "apiCert",
                 domain_name=auth_domain_name,
-                validation=certificatemanager.CertificateValidation.from_dns(root_hosted_zone)
+                validation=certificatemanager.CertificateValidation.from_dns(
+                    root_hosted_zone
+                ),
             )
 
-            user_pool_domain = user_pool.add_domain("Domain", custom_domain=cognito.CustomDomainOptions(
-                certificate=auth_domain_certificate,
-                domain_name=auth_domain_name
-            ))
+            user_pool_domain = user_pool.add_domain(
+                "Domain",
+                custom_domain=cognito.CustomDomainOptions(
+                    certificate=auth_domain_certificate, domain_name=auth_domain_name
+                ),
+            )
 
             route53.CnameRecord(
                 self,
                 "UserPoolDomainCNameRecord",
                 zone=root_hosted_zone,
                 domain_name=user_pool_domain.cloud_front_domain_name,
-                record_name="auth"
+                record_name="auth",
             )
 
         ssm.StringParameter(
             self,
             "UserPoolArn",
-            description='The ARN of the user pool.',
+            description="The ARN of the user pool.",
             parameter_name=USER_POOL_ARN_PARAM,
             string_value=user_pool.user_pool_arn,
             tier=ssm.ParameterTier.STANDARD,

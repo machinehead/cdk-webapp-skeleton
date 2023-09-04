@@ -1,6 +1,7 @@
 import aws_cdk as cdk
 from aws_cdk import aws_codebuild as codebuild
 from aws_cdk import aws_codestarnotifications as codestarnotifications
+from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3 as s3
 from aws_cdk import aws_sns as sns
 from aws_cdk import aws_sns_subscriptions as subscriptions
@@ -28,13 +29,24 @@ class BranchCICDPipeline(Construct):
             auto_delete_objects=True,
         )
 
-        synth_step = pipelines.ShellStep(
+        synth_step = pipelines.CodeBuildStep(
             "Synth",
             input=branch_config.source,
+            commands=["./synth.sh"],
             env={
                 "BRANCH": branch_config.branch_name,
             },
-            commands=["./synth.sh"],
+            role_policy_statements=[
+                iam.PolicyStatement(
+                    actions=["sts:AssumeRole"],
+                    resources=["*"],
+                    conditions={
+                        "StringEquals": {
+                            "iam:ResourceTag/aws-cdk:bootstrap-role": "lookup"
+                        }
+                    },
+                )
+            ],
         )
 
         self.cdk_pipeline = pipelines.CodePipeline(

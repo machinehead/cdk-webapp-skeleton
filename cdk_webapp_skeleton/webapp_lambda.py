@@ -81,7 +81,7 @@ class WebappLambda(Construct):
         )
         self.webapp_lambda_func = self.monitored_lambda.lambda_function
 
-        root_hosted_zone = branch_config.get_hosted_zone(scope)
+        root_hosted_zone = branch_config.get_hosted_zone(self)
         if root_hosted_zone is not None:
             backend_domain_name = "api." + branch_config.domain_name
 

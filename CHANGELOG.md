@@ -1,3 +1,16 @@
+## v0.6.0 (2023-09-10)
+
+### Feat
+
+- **webapp_lambda**: allow specifying the Lambda timeout externally
+
+### Fix
+
+- **WebappLambda**: wrap the hosted zone into the construct's scope
+- **SynthStep**: allow the Synth step to perform lookups
+- **react_website**: allow loading images from data: by CSP
+- **auth_stack**: increase access token validity to 1 day and refresh token to 30 days
+
 ## v0.5.1 (2023-09-03)
 
 ### Fix

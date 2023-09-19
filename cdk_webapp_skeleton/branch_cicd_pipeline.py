@@ -45,7 +45,11 @@ class BranchCICDPipeline(Construct):
                             "iam:ResourceTag/aws-cdk:bootstrap-role": "lookup"
                         }
                     },
-                )
+                ),
+                iam.PolicyStatement(
+                    actions=["elasticloadbalancing:DescribeRules"],
+                    resources=["*"],
+                ),
             ],
         )
 

@@ -46,6 +46,7 @@ class MonitoredLambdaFunction(Construct):
         lambda_runtime_environment.update(
             {
                 "AWS_CODEGURU_PROFILER_GROUP_ARN": profiling_group.profiling_group_arn,
+                "RUNNING_IN_AWS": "true",
             }
         )
 

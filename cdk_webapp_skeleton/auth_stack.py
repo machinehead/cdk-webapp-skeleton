@@ -82,6 +82,7 @@ class AuthStack(cdk.Stack):
                 user_pool=user_pool,
                 client_id=branch_config.google_client_id,
                 client_secret=branch_config.google_client_secret,
+                scopes=["profile", "email", "openid"],
                 attribute_mapping=cognito.AttributeMapping(
                     email=cognito.ProviderAttribute.GOOGLE_EMAIL,
                 ),

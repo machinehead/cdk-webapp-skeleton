@@ -1,5 +1,5 @@
 import warnings
-from typing import Optional
+from typing import Dict, Optional
 
 import aws_cdk as cdk
 from aws_cdk import aws_apigateway as apigateway
@@ -26,7 +26,7 @@ class WebappLambda(Construct):
         branch_config: BranchConfig,
         code: Optional[_lambda.DockerImageCode] = None,
         image_directory: Optional[str] = None,
-        lambda_runtime_environment: Optional[dict[str, str]] = None,
+        lambda_runtime_environment: Optional[Dict[str, str]] = None,
         memory_size: Optional[int] = 256,
         alarm_topic: Optional[sns.ITopic] = None,
         *,

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Dict, Optional
 
 import aws_cdk as cdk
 from aws_cdk import aws_cloudwatch as cloudwatch
@@ -16,7 +16,7 @@ class MonitoredLambdaFunction(Construct):
         scope: "Construct",
         _id: str,
         code: _lambda.DockerImageCode,
-        lambda_runtime_environment: Optional[dict[str, str]] = None,
+        lambda_runtime_environment: Optional[Dict[str, str]] = None,
         memory_size: Optional[int] = 256,
         timeout: Optional[cdk.Duration] = None,
         alarm_topic: Optional[sns.ITopic] = None,

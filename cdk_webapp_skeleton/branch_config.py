@@ -8,7 +8,7 @@ from constructs import Construct
 
 
 class BranchConfig(ABC):
-    def __init__(self, branch_name):
+    def __init__(self, branch_name: str):
         """
 
         :param branch_name:
@@ -39,14 +39,14 @@ class BranchConfig(ABC):
         return "main"
 
     @classmethod
-    def from_branch_name(cls, branch_name):
+    def from_branch_name(cls, branch_name: str) -> "BranchConfig":
         return cls(branch_name)
 
     @property
-    def branch_name(self):
+    def branch_name(self) -> str:
         return self._branch_name
 
-    def construct_id(self, id_: str):
+    def construct_id(self, id_: str) -> str:
         """
         Contextualizes constructs by environment.
         :param id_: construct id
@@ -62,18 +62,28 @@ class BranchConfig(ABC):
         return "AuthStack" if self._branch_name == self.main_branch_name else None
 
     @property
-    def build_user_pool(self):
+    def build_user_pool(self) -> bool:
         return self._branch_name == self.main_branch_name
 
     @property
-    def domain_name(self):
+    def domain_name(self) -> str:
         return f"{self._domain_prefix}{self.domain_name_base}"
 
     @property
-    def auth_domain_name(self):
+    def auth_domain_name(self) -> str:
         return f"auth.{self.domain_name_base}"
 
     @property
     def notify_email(self) -> Optional[str]:
         """Email address to send deploy and alarm notifications to."""
+        return None
+
+    @property
+    def google_client_id(self) -> Optional[str]:
+        """Client ID for Google OAuth."""
+        return None
+
+    @property
+    def google_client_secret(self) -> Optional[str]:
+        """Secret for Google OAuth."""
         return None

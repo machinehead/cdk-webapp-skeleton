@@ -78,7 +78,7 @@ class BranchCICDPipeline(Construct):
     def add_stage(self, stage: cdk.Stage) -> pipelines.StageDeployment:
         return self.cdk_pipeline.add_stage(stage)
 
-    def build_pipeline(self):
+    def build_pipeline(self) -> None:
         self.cdk_pipeline.build_pipeline()
 
         self.cdk_pipeline.pipeline.notify_on_execution_state_change(

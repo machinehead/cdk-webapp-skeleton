@@ -20,7 +20,7 @@ class AuthStackOutputs(object):
 
 
 class AuthStack(cdk.Stack):
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def]
         self,
         scope: Construct,
         branch_config: BranchConfig,
@@ -31,6 +31,8 @@ class AuthStack(cdk.Stack):
             scope, "AuthStack", **kwargs, stack_name=branch_config.auth_stack_name()
         )
         self._user_pool_name = user_pool_name
+
+        user_pool: cognito.IUserPool
 
         if branch_config.build_user_pool:
             user_pool = self.build_user_pool(branch_config)
@@ -59,19 +61,31 @@ class AuthStack(cdk.Stack):
             ),
         )
 
-    def find_user_pool(self):
+    def find_user_pool(self) -> cognito.IUserPool:
         user_pool_arn = ssm.StringParameter.value_for_string_parameter(
             self, parameter_name=USER_POOL_ARN_PARAM
         )
         return cognito.UserPool.from_user_pool_arn(self, "UserPool", user_pool_arn)
 
-    def build_user_pool(self, branch_config: BranchConfig):
+    def build_user_pool(self, branch_config: BranchConfig) -> cognito.UserPool:
         user_pool = cognito.UserPool(
             self,
             "UserPool",
             user_pool_name=self._user_pool_name,
             sign_in_case_sensitive=False,
         )
+
+        if branch_config.google_client_id is not None:
+            cognito.UserPoolIdentityProviderGoogle(
+                self,
+                "GoogleProvider",
+                user_pool=user_pool,
+                client_id=branch_config.google_client_id,
+                client_secret=branch_config.google_client_secret,
+                attribute_mapping=cognito.AttributeMapping(
+                    email=cognito.ProviderAttribute.GOOGLE_EMAIL,
+                ),
+            )
 
         root_hosted_zone = branch_config.get_hosted_zone(self)
         auth_domain_name = branch_config.auth_domain_name

@@ -4,6 +4,7 @@ from typing import Dict, Optional
 import aws_cdk as cdk
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_certificatemanager as certificatemanager
+from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_events as events
 from aws_cdk import aws_events_targets as events_targets
 from aws_cdk import aws_lambda as _lambda
@@ -31,6 +32,7 @@ class WebappLambda(Construct):
         alarm_topic: Optional[sns.ITopic] = None,
         *,
         timeout: Optional[cdk.Duration] = None,
+        vpc: Optional[ec2.IVpc] = None,
     ):
         """
 
@@ -78,6 +80,7 @@ class WebappLambda(Construct):
             memory_size=memory_size,
             alarm_topic=alarm_topic,
             timeout=timeout,
+            vpc=vpc,
         )
         self.webapp_lambda_func = self.monitored_lambda.lambda_function
 

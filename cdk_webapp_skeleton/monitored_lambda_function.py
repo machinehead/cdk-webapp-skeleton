@@ -4,6 +4,7 @@ import aws_cdk as cdk
 from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_cloudwatch_actions as cloudwatch_actions
 from aws_cdk import aws_codeguruprofiler as codeguruprofiler
+from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_logs as logs
 from aws_cdk import aws_sns as sns
@@ -20,6 +21,8 @@ class MonitoredLambdaFunction(Construct):
         memory_size: Optional[int] = 256,
         timeout: Optional[cdk.Duration] = None,
         alarm_topic: Optional[sns.ITopic] = None,
+        *,
+        vpc: Optional[ec2.IVpc] = None,
     ):
         """
 
@@ -59,6 +62,7 @@ class MonitoredLambdaFunction(Construct):
             memory_size=memory_size,
             tracing=_lambda.Tracing.ACTIVE,
             timeout=timeout,
+            vpc=vpc,
         )
 
         profiling_group.grant_publish(self.lambda_function)

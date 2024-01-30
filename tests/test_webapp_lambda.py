@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import aws_cdk as cdk
 from aws_cdk import assertions
 from aws_cdk import aws_lambda as _lambda
@@ -24,90 +22,6 @@ class WebappLambdaTestStack(cdk.Stack):
         )
 
 
-def test_webapp_lambda():
+def test_webapp_lambda(snapshot):
     template = assertions.Template.from_stack(WebappLambdaTestStack())
-    pprint(template.to_json())
-    template.resource_count_is("AWS::Lambda::Function", 2)
-    template.has_resource(
-        "AWS::Lambda::Function",
-        {"Properties": {"PackageType": "Image", "MemorySize": 256, "Timeout": 4}},
-    )
-
-    template.resource_count_is("AWS::CloudWatch::Alarm", 3)
-    template.has_resource(
-        "AWS::CloudWatch::Alarm",
-        {
-            "Properties": {
-                "ComparisonOperator": "GreaterThanThreshold",
-                "Dimensions": [
-                    {
-                        "Name": "FunctionName",
-                        "Value": {"Ref": "ProdWebappLambdaB7300C0B"},
-                    }
-                ],
-                "EvaluationPeriods": 1,
-                "MetricName": "Throttles",
-                "Namespace": "AWS/Lambda",
-                "Period": 300,
-                "Statistic": "Sum",
-                "Threshold": 0,
-                "TreatMissingData": "ignore",
-            },
-        },
-    )
-    template.has_resource(
-        "AWS::CloudWatch::Alarm",
-        {
-            "Properties": {
-                "ComparisonOperator": "GreaterThanThreshold",
-                "Dimensions": [
-                    {
-                        "Name": "FunctionName",
-                        "Value": {"Ref": "ProdWebappLambdaB7300C0B"},
-                    }
-                ],
-                "EvaluationPeriods": 1,
-                "MetricName": "Errors",
-                "Namespace": "AWS/Lambda",
-                "Period": 300,
-                "Statistic": "Sum",
-                "Threshold": 0,
-                "TreatMissingData": "ignore",
-            },
-        },
-    )
-    template.has_resource(
-        "AWS::CloudWatch::Alarm",
-        {
-            "Properties": {
-                "ComparisonOperator": "GreaterThanThreshold",
-                "EvaluationPeriods": 1,
-                "MetricName": "Timeouts",
-                "Namespace": "ProdWebappLambda",
-                "Period": 300,
-                "Statistic": "Sum",
-                "Threshold": 0,
-                "TreatMissingData": "ignore",
-            },
-        },
-    )
-
-    template.resource_count_is("AWS::Logs::MetricFilter", 1)
-
-    # FlaskLambda warmup rule
-    template.has_resource(
-        "AWS::Events::Rule",
-        {
-            "Properties": {
-                "ScheduleExpression": "rate(1 minute)",
-                "Targets": [
-                    {
-                        "HttpParameters": {},
-                        "Id": "Target0",
-                        # Make sure that if the lambda fails, a retry storm doesn't happen
-                        "RetryPolicy": {"MaximumRetryAttempts": 0},
-                    }
-                ],
-            },
-        },
-    )
+    assert template.to_json() == snapshot

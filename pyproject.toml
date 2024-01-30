@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "cdk_webapp_skeleton"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = " >=3.8.1,<4"
 aws-cdk-lib = "^2.67.0"
 cloudcomponents-cdk-static-website = "^2.0.0"
 
@@ -17,6 +17,7 @@ pytest-cov = "^4.0.0"
 pre-commit = "^3.2.0"
 commitizen = "^3.2.1"
 mypy = "^1.6.1"
+syrupy = "^4.6.0"
 
 [build-system]
 requires = ["poetry-core", "poetry-dynamic-versioning"]

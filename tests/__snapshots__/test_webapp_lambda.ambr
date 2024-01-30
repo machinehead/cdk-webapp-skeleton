@@ -1,0 +1,972 @@
+# serializer version: 1
+# name: test_webapp_lambda
+  dict({
+    'Outputs': dict({
+      'ProdWebappBackendApiEndpoint99CDD6E4': dict({
+        'Value': dict({
+          'Fn::Join': list([
+            '',
+            list([
+              'https://',
+              dict({
+                'Ref': 'ProdWebappBackendApi4C365FFA',
+              }),
+              '.execute-api.',
+              dict({
+                'Ref': 'AWS::Region',
+              }),
+              '.',
+              dict({
+                'Ref': 'AWS::URLSuffix',
+              }),
+              '/',
+              dict({
+                'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+              }),
+              '/',
+            ]),
+          ]),
+        }),
+      }),
+    }),
+    'Parameters': dict({
+      'BootstrapVersion': dict({
+        'Default': '/cdk-bootstrap/hnb659fds/version',
+        'Description': 'Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]',
+        'Type': 'AWS::SSM::Parameter::Value<String>',
+      }),
+    }),
+    'Resources': dict({
+      'BackendApiARecord1EFE8532': dict({
+        'Properties': dict({
+          'AliasTarget': dict({
+            'DNSName': dict({
+              'Fn::GetAtt': list([
+                'ProdWebappBackendApiCustomDomain395D07DB',
+                'RegionalDomainName',
+              ]),
+            }),
+            'HostedZoneId': dict({
+              'Fn::GetAtt': list([
+                'ProdWebappBackendApiCustomDomain395D07DB',
+                'RegionalHostedZoneId',
+              ]),
+            }),
+          }),
+          'HostedZoneId': 'RANDOMHZID',
+          'Name': 'api.testing.com.',
+          'Type': 'A',
+        }),
+        'Type': 'AWS::Route53::RecordSet',
+      }),
+      'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A': dict({
+        'DependsOn': list([
+          'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB',
+          'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB',
+        ]),
+        'Properties': dict({
+          'Code': dict({
+            'S3Bucket': dict({
+              'Fn::Sub': 'cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}',
+            }),
+            'S3Key': '4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip',
+          }),
+          'Handler': 'index.handler',
+          'Role': dict({
+            'Fn::GetAtt': list([
+              'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB',
+              'Arn',
+            ]),
+          }),
+          'Runtime': 'nodejs18.x',
+          'Timeout': 900,
+        }),
+        'Type': 'AWS::Lambda::Function',
+      }),
+      'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB': dict({
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'lambda.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'ManagedPolicyArns': list([
+            dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                ]),
+              ]),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Role',
+      }),
+      'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB': dict({
+        'Properties': dict({
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  'logs:PutRetentionPolicy',
+                  'logs:DeleteRetentionPolicy',
+                ]),
+                'Effect': 'Allow',
+                'Resource': '*',
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'PolicyName': 'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB',
+          'Roles': list([
+            dict({
+              'Ref': 'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Policy',
+      }),
+      'ProdWebappBackendApi4C365FFA': dict({
+        'Properties': dict({
+          'DisableExecuteApiEndpoint': False,
+          'Name': 'ProdWebappBackendApi',
+        }),
+        'Type': 'AWS::ApiGateway::RestApi',
+      }),
+      'ProdWebappBackendApiANY97E8C7F1': dict({
+        'Properties': dict({
+          'AuthorizationType': 'NONE',
+          'HttpMethod': 'ANY',
+          'Integration': dict({
+            'IntegrationHttpMethod': 'POST',
+            'Type': 'AWS_PROXY',
+            'Uri': dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':apigateway:',
+                  dict({
+                    'Ref': 'AWS::Region',
+                  }),
+                  ':lambda:path/2015-03-31/functions/',
+                  dict({
+                    'Fn::GetAtt': list([
+                      'ProdWebappLambdaB7300C0B',
+                      'Arn',
+                    ]),
+                  }),
+                  '/invocations',
+                ]),
+              ]),
+            }),
+          }),
+          'ResourceId': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappBackendApi4C365FFA',
+              'RootResourceId',
+            ]),
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Method',
+      }),
+      'ProdWebappBackendApiANYApiPermissionProdWebappBackendApiANY6F53FB91': dict({
+        'Properties': dict({
+          'Action': 'lambda:InvokeFunction',
+          'FunctionName': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaB7300C0B',
+              'Arn',
+            ]),
+          }),
+          'Principal': 'apigateway.amazonaws.com',
+          'SourceArn': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                'arn:',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                ':execute-api:',
+                dict({
+                  'Ref': 'AWS::Region',
+                }),
+                ':',
+                dict({
+                  'Ref': 'AWS::AccountId',
+                }),
+                ':',
+                dict({
+                  'Ref': 'ProdWebappBackendApi4C365FFA',
+                }),
+                '/',
+                dict({
+                  'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+                }),
+                '/*/',
+              ]),
+            ]),
+          }),
+        }),
+        'Type': 'AWS::Lambda::Permission',
+      }),
+      'ProdWebappBackendApiANYApiPermissionTestProdWebappBackendApiANY60ED71D7': dict({
+        'Properties': dict({
+          'Action': 'lambda:InvokeFunction',
+          'FunctionName': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaB7300C0B',
+              'Arn',
+            ]),
+          }),
+          'Principal': 'apigateway.amazonaws.com',
+          'SourceArn': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                'arn:',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                ':execute-api:',
+                dict({
+                  'Ref': 'AWS::Region',
+                }),
+                ':',
+                dict({
+                  'Ref': 'AWS::AccountId',
+                }),
+                ':',
+                dict({
+                  'Ref': 'ProdWebappBackendApi4C365FFA',
+                }),
+                '/test-invoke-stage/*/',
+              ]),
+            ]),
+          }),
+        }),
+        'Type': 'AWS::Lambda::Permission',
+      }),
+      'ProdWebappBackendApiAccountEC788AD6': dict({
+        'DeletionPolicy': 'Retain',
+        'DependsOn': list([
+          'ProdWebappBackendApi4C365FFA',
+        ]),
+        'Properties': dict({
+          'CloudWatchRoleArn': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappBackendApiCloudWatchRoleEA65C82C',
+              'Arn',
+            ]),
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Account',
+        'UpdateReplacePolicy': 'Retain',
+      }),
+      'ProdWebappBackendApiCloudWatchRoleEA65C82C': dict({
+        'DeletionPolicy': 'Retain',
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'apigateway.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'ManagedPolicyArns': list([
+            dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs',
+                ]),
+              ]),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Role',
+        'UpdateReplacePolicy': 'Retain',
+      }),
+      'ProdWebappBackendApiCustomDomain395D07DB': dict({
+        'Properties': dict({
+          'DomainName': 'api.testing.com',
+          'EndpointConfiguration': dict({
+            'Types': list([
+              'REGIONAL',
+            ]),
+          }),
+          'RegionalCertificateArn': dict({
+            'Ref': 'apiCert799E82B2',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::DomainName',
+      }),
+      'ProdWebappBackendApiCustomDomainMapProdWebappBackendApi6AF978AE': dict({
+        'Properties': dict({
+          'DomainName': dict({
+            'Ref': 'ProdWebappBackendApiCustomDomain395D07DB',
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+          'Stage': dict({
+            'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::BasePathMapping',
+      }),
+      'ProdWebappBackendApiDeploymentDDF7A18B8890e8958883c47620ca2e4b785602dc': dict({
+        'DependsOn': list([
+          'ProdWebappBackendApiproxyANY41E5A079',
+          'ProdWebappBackendApiproxyOPTIONSFAD550CF',
+          'ProdWebappBackendApiproxy323B2BAF',
+          'ProdWebappBackendApiANY97E8C7F1',
+          'ProdWebappBackendApiOPTIONSF0C06A3E',
+        ]),
+        'Properties': dict({
+          'Description': 'Automatically created by the RestApi construct',
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Deployment',
+      }),
+      'ProdWebappBackendApiDeploymentStageprodE8114DE8': dict({
+        'DependsOn': list([
+          'ProdWebappBackendApiAccountEC788AD6',
+        ]),
+        'Properties': dict({
+          'DeploymentId': dict({
+            'Ref': 'ProdWebappBackendApiDeploymentDDF7A18B8890e8958883c47620ca2e4b785602dc',
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+          'StageName': 'prod',
+          'TracingEnabled': True,
+        }),
+        'Type': 'AWS::ApiGateway::Stage',
+      }),
+      'ProdWebappBackendApiEventsRole1CC83493': dict({
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'events.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+        }),
+        'Type': 'AWS::IAM::Role',
+      }),
+      'ProdWebappBackendApiEventsRoleDefaultPolicy0F206579': dict({
+        'Properties': dict({
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  'execute-api:Invoke',
+                  'execute-api:ManageConnections',
+                ]),
+                'Effect': 'Allow',
+                'Resource': dict({
+                  'Fn::Join': list([
+                    '',
+                    list([
+                      'arn:',
+                      dict({
+                        'Ref': 'AWS::Partition',
+                      }),
+                      ':execute-api:',
+                      dict({
+                        'Ref': 'AWS::Region',
+                      }),
+                      ':',
+                      dict({
+                        'Ref': 'AWS::AccountId',
+                      }),
+                      ':',
+                      dict({
+                        'Ref': 'ProdWebappBackendApi4C365FFA',
+                      }),
+                      '/',
+                      dict({
+                        'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+                      }),
+                      '/*/',
+                    ]),
+                  ]),
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'PolicyName': 'ProdWebappBackendApiEventsRoleDefaultPolicy0F206579',
+          'Roles': list([
+            dict({
+              'Ref': 'ProdWebappBackendApiEventsRole1CC83493',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Policy',
+      }),
+      'ProdWebappBackendApiOPTIONSF0C06A3E': dict({
+        'Properties': dict({
+          'ApiKeyRequired': False,
+          'AuthorizationType': 'NONE',
+          'HttpMethod': 'OPTIONS',
+          'Integration': dict({
+            'IntegrationResponses': list([
+              dict({
+                'ResponseParameters': dict({
+                  'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                  'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                  'method.response.header.Access-Control-Allow-Origin': "'*'",
+                }),
+                'StatusCode': '204',
+              }),
+            ]),
+            'RequestTemplates': dict({
+              'application/json': '{ statusCode: 200 }',
+            }),
+            'Type': 'MOCK',
+          }),
+          'MethodResponses': list([
+            dict({
+              'ResponseParameters': dict({
+                'method.response.header.Access-Control-Allow-Headers': True,
+                'method.response.header.Access-Control-Allow-Methods': True,
+                'method.response.header.Access-Control-Allow-Origin': True,
+              }),
+              'StatusCode': '204',
+            }),
+          ]),
+          'ResourceId': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappBackendApi4C365FFA',
+              'RootResourceId',
+            ]),
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Method',
+      }),
+      'ProdWebappBackendApiproxy323B2BAF': dict({
+        'Properties': dict({
+          'ParentId': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappBackendApi4C365FFA',
+              'RootResourceId',
+            ]),
+          }),
+          'PathPart': '{proxy+}',
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Resource',
+      }),
+      'ProdWebappBackendApiproxyANY41E5A079': dict({
+        'Properties': dict({
+          'AuthorizationType': 'NONE',
+          'HttpMethod': 'ANY',
+          'Integration': dict({
+            'IntegrationHttpMethod': 'POST',
+            'Type': 'AWS_PROXY',
+            'Uri': dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':apigateway:',
+                  dict({
+                    'Ref': 'AWS::Region',
+                  }),
+                  ':lambda:path/2015-03-31/functions/',
+                  dict({
+                    'Fn::GetAtt': list([
+                      'ProdWebappLambdaB7300C0B',
+                      'Arn',
+                    ]),
+                  }),
+                  '/invocations',
+                ]),
+              ]),
+            }),
+          }),
+          'ResourceId': dict({
+            'Ref': 'ProdWebappBackendApiproxy323B2BAF',
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Method',
+      }),
+      'ProdWebappBackendApiproxyANYApiPermissionProdWebappBackendApiANYproxy992B73CA': dict({
+        'Properties': dict({
+          'Action': 'lambda:InvokeFunction',
+          'FunctionName': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaB7300C0B',
+              'Arn',
+            ]),
+          }),
+          'Principal': 'apigateway.amazonaws.com',
+          'SourceArn': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                'arn:',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                ':execute-api:',
+                dict({
+                  'Ref': 'AWS::Region',
+                }),
+                ':',
+                dict({
+                  'Ref': 'AWS::AccountId',
+                }),
+                ':',
+                dict({
+                  'Ref': 'ProdWebappBackendApi4C365FFA',
+                }),
+                '/',
+                dict({
+                  'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+                }),
+                '/*/*',
+              ]),
+            ]),
+          }),
+        }),
+        'Type': 'AWS::Lambda::Permission',
+      }),
+      'ProdWebappBackendApiproxyANYApiPermissionTestProdWebappBackendApiANYproxy717F0B23': dict({
+        'Properties': dict({
+          'Action': 'lambda:InvokeFunction',
+          'FunctionName': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaB7300C0B',
+              'Arn',
+            ]),
+          }),
+          'Principal': 'apigateway.amazonaws.com',
+          'SourceArn': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                'arn:',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                ':execute-api:',
+                dict({
+                  'Ref': 'AWS::Region',
+                }),
+                ':',
+                dict({
+                  'Ref': 'AWS::AccountId',
+                }),
+                ':',
+                dict({
+                  'Ref': 'ProdWebappBackendApi4C365FFA',
+                }),
+                '/test-invoke-stage/*/*',
+              ]),
+            ]),
+          }),
+        }),
+        'Type': 'AWS::Lambda::Permission',
+      }),
+      'ProdWebappBackendApiproxyOPTIONSFAD550CF': dict({
+        'Properties': dict({
+          'ApiKeyRequired': False,
+          'AuthorizationType': 'NONE',
+          'HttpMethod': 'OPTIONS',
+          'Integration': dict({
+            'IntegrationResponses': list([
+              dict({
+                'ResponseParameters': dict({
+                  'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                  'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                  'method.response.header.Access-Control-Allow-Origin': "'*'",
+                }),
+                'StatusCode': '204',
+              }),
+            ]),
+            'RequestTemplates': dict({
+              'application/json': '{ statusCode: 200 }',
+            }),
+            'Type': 'MOCK',
+          }),
+          'MethodResponses': list([
+            dict({
+              'ResponseParameters': dict({
+                'method.response.header.Access-Control-Allow-Headers': True,
+                'method.response.header.Access-Control-Allow-Methods': True,
+                'method.response.header.Access-Control-Allow-Origin': True,
+              }),
+              'StatusCode': '204',
+            }),
+          ]),
+          'ResourceId': dict({
+            'Ref': 'ProdWebappBackendApiproxy323B2BAF',
+          }),
+          'RestApiId': dict({
+            'Ref': 'ProdWebappBackendApi4C365FFA',
+          }),
+        }),
+        'Type': 'AWS::ApiGateway::Method',
+      }),
+      'ProdWebappLambdaB7300C0B': dict({
+        'DependsOn': list([
+          'ProdWebappLambdaServiceRoleDefaultPolicy60ADC937',
+          'ProdWebappLambdaServiceRole0CFEC941',
+        ]),
+        'Properties': dict({
+          'Code': dict({
+            'ImageUri': dict({
+              'Fn::Sub': '${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:0be629293f9873f370bb8528863b35ce326633d98dd9837929fd3e541bbd9e3f',
+            }),
+          }),
+          'Environment': dict({
+            'Variables': dict({
+              'AWS_CODEGURU_PROFILER_GROUP_ARN': dict({
+                'Fn::GetAtt': list([
+                  'ProdWebappLambdaProfilingGroup0EA8A948',
+                  'Arn',
+                ]),
+              }),
+              'RUNNING_IN_AWS': 'true',
+            }),
+          }),
+          'MemorySize': 256,
+          'PackageType': 'Image',
+          'Role': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaServiceRole0CFEC941',
+              'Arn',
+            ]),
+          }),
+          'Timeout': 4,
+          'TracingConfig': dict({
+            'Mode': 'Active',
+          }),
+        }),
+        'Type': 'AWS::Lambda::Function',
+      }),
+      'ProdWebappLambdaErrors01FEB8F5': dict({
+        'Properties': dict({
+          'ComparisonOperator': 'GreaterThanThreshold',
+          'Dimensions': list([
+            dict({
+              'Name': 'FunctionName',
+              'Value': dict({
+                'Ref': 'ProdWebappLambdaB7300C0B',
+              }),
+            }),
+          ]),
+          'EvaluationPeriods': 1,
+          'MetricName': 'Errors',
+          'Namespace': 'AWS/Lambda',
+          'Period': 300,
+          'Statistic': 'Sum',
+          'Threshold': 0,
+          'TreatMissingData': 'ignore',
+        }),
+        'Type': 'AWS::CloudWatch::Alarm',
+      }),
+      'ProdWebappLambdaLogRetention955854B0': dict({
+        'Properties': dict({
+          'LogGroupName': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                '/aws/lambda/',
+                dict({
+                  'Ref': 'ProdWebappLambdaB7300C0B',
+                }),
+              ]),
+            ]),
+          }),
+          'RetentionInDays': 14,
+          'ServiceToken': dict({
+            'Fn::GetAtt': list([
+              'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A',
+              'Arn',
+            ]),
+          }),
+        }),
+        'Type': 'Custom::LogRetention',
+      }),
+      'ProdWebappLambdaProfilingGroup0EA8A948': dict({
+        'Properties': dict({
+          'ComputePlatform': 'AWSLambda',
+          'ProfilingGroupName': 'ProdWebappLambdaProfilingGroup',
+        }),
+        'Type': 'AWS::CodeGuruProfiler::ProfilingGroup',
+      }),
+      'ProdWebappLambdaServiceRole0CFEC941': dict({
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'lambda.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'ManagedPolicyArns': list([
+            dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                ]),
+              ]),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Role',
+      }),
+      'ProdWebappLambdaServiceRoleDefaultPolicy60ADC937': dict({
+        'Properties': dict({
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  'xray:PutTraceSegments',
+                  'xray:PutTelemetryRecords',
+                ]),
+                'Effect': 'Allow',
+                'Resource': '*',
+              }),
+              dict({
+                'Action': list([
+                  'codeguru-profiler:ConfigureAgent',
+                  'codeguru-profiler:PostAgentProfile',
+                ]),
+                'Effect': 'Allow',
+                'Resource': dict({
+                  'Fn::GetAtt': list([
+                    'ProdWebappLambdaProfilingGroup0EA8A948',
+                    'Arn',
+                  ]),
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'PolicyName': 'ProdWebappLambdaServiceRoleDefaultPolicy60ADC937',
+          'Roles': list([
+            dict({
+              'Ref': 'ProdWebappLambdaServiceRole0CFEC941',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Policy',
+      }),
+      'ProdWebappLambdaThrottlesC5A20187': dict({
+        'Properties': dict({
+          'ComparisonOperator': 'GreaterThanThreshold',
+          'Dimensions': list([
+            dict({
+              'Name': 'FunctionName',
+              'Value': dict({
+                'Ref': 'ProdWebappLambdaB7300C0B',
+              }),
+            }),
+          ]),
+          'EvaluationPeriods': 1,
+          'MetricName': 'Throttles',
+          'Namespace': 'AWS/Lambda',
+          'Period': 300,
+          'Statistic': 'Sum',
+          'Threshold': 0,
+          'TreatMissingData': 'ignore',
+        }),
+        'Type': 'AWS::CloudWatch::Alarm',
+      }),
+      'ProdWebappLambdaTimeouts0BECD9BC': dict({
+        'Properties': dict({
+          'ComparisonOperator': 'GreaterThanThreshold',
+          'EvaluationPeriods': 1,
+          'MetricName': 'Timeouts',
+          'Namespace': 'ProdWebappLambda',
+          'Period': 300,
+          'Statistic': 'Sum',
+          'Threshold': 0,
+          'TreatMissingData': 'ignore',
+        }),
+        'Type': 'AWS::CloudWatch::Alarm',
+      }),
+      'ProdWebappLambdaTimeoutsMetricFilter106C5A82': dict({
+        'Properties': dict({
+          'FilterPattern': '"Task timed out"',
+          'LogGroupName': dict({
+            'Fn::GetAtt': list([
+              'ProdWebappLambdaLogRetention955854B0',
+              'LogGroupName',
+            ]),
+          }),
+          'MetricTransformations': list([
+            dict({
+              'DefaultValue': 0,
+              'MetricName': 'Timeouts',
+              'MetricNamespace': 'ProdWebappLambda',
+              'MetricValue': '1',
+              'Unit': 'Count',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::Logs::MetricFilter',
+      }),
+      'RestApiWarmup72F4F76D': dict({
+        'Properties': dict({
+          'ScheduleExpression': 'rate(1 minute)',
+          'State': 'ENABLED',
+          'Targets': list([
+            dict({
+              'Arn': dict({
+                'Fn::Join': list([
+                  '',
+                  list([
+                    'arn:',
+                    dict({
+                      'Ref': 'AWS::Partition',
+                    }),
+                    ':execute-api:',
+                    dict({
+                      'Ref': 'AWS::Region',
+                    }),
+                    ':',
+                    dict({
+                      'Ref': 'AWS::AccountId',
+                    }),
+                    ':',
+                    dict({
+                      'Ref': 'ProdWebappBackendApi4C365FFA',
+                    }),
+                    '/',
+                    dict({
+                      'Ref': 'ProdWebappBackendApiDeploymentStageprodE8114DE8',
+                    }),
+                    '/*/',
+                  ]),
+                ]),
+              }),
+              'HttpParameters': dict({
+              }),
+              'Id': 'Target0',
+              'RetryPolicy': dict({
+                'MaximumRetryAttempts': 0,
+              }),
+              'RoleArn': dict({
+                'Fn::GetAtt': list([
+                  'ProdWebappBackendApiEventsRole1CC83493',
+                  'Arn',
+                ]),
+              }),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::Events::Rule',
+      }),
+      'apiCert799E82B2': dict({
+        'Properties': dict({
+          'DomainName': 'api.testing.com',
+          'DomainValidationOptions': list([
+            dict({
+              'DomainName': 'api.testing.com',
+              'HostedZoneId': 'RANDOMHZID',
+            }),
+          ]),
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Default/apiCert',
+            }),
+          ]),
+          'ValidationMethod': 'DNS',
+        }),
+        'Type': 'AWS::CertificateManager::Certificate',
+      }),
+    }),
+    'Rules': dict({
+      'CheckBootstrapVersion': dict({
+        'Assertions': list([
+          dict({
+            'Assert': dict({
+              'Fn::Not': list([
+                dict({
+                  'Fn::Contains': list([
+                    list([
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                    ]),
+                    dict({
+                      'Ref': 'BootstrapVersion',
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+            'AssertDescription': "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---

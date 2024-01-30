@@ -23,6 +23,8 @@ class MonitoredLambdaFunction(Construct):
         alarm_topic: Optional[sns.ITopic] = None,
         *,
         vpc: Optional[ec2.IVpc] = None,
+        enable_profiling: bool = True,
+        enable_alarms: bool = True,
     ):
         """
 
@@ -40,18 +42,23 @@ class MonitoredLambdaFunction(Construct):
         else:
             lambda_runtime_environment = lambda_runtime_environment.copy()
 
-        profiling_group = codeguruprofiler.ProfilingGroup(
-            scope,
-            _id + "ProfilingGroup",
-            compute_platform=codeguruprofiler.ComputePlatform.AWS_LAMBDA,
-        )
-
         lambda_runtime_environment.update(
             {
-                "AWS_CODEGURU_PROFILER_GROUP_ARN": profiling_group.profiling_group_arn,
                 "RUNNING_IN_AWS": "true",
             }
         )
+
+        if enable_profiling:
+            profiling_group = codeguruprofiler.ProfilingGroup(
+                scope,
+                _id + "ProfilingGroup",
+                compute_platform=codeguruprofiler.ComputePlatform.AWS_LAMBDA,
+            )
+            lambda_runtime_environment.update(
+                {
+                    "AWS_CODEGURU_PROFILER_GROUP_ARN": profiling_group.profiling_group_arn,
+                }
+            )
 
         log_group = logs.LogGroup(
             scope,
@@ -72,51 +79,57 @@ class MonitoredLambdaFunction(Construct):
             vpc=vpc,
         )
 
-        profiling_group.grant_publish(self.lambda_function)
+        if enable_profiling:
+            profiling_group.grant_publish(self.lambda_function)
 
-        timeouts_metric_filter = logs.MetricFilter(
-            scope,
-            _id + "TimeoutsMetricFilter",
-            log_group=self.lambda_function.log_group,
-            filter_pattern=logs.FilterPattern.literal('"Task timed out"'),
-            metric_name="Timeouts",
-            metric_namespace=_id,
-            metric_value="1",
-            default_value=0,
-            unit=cloudwatch.Unit.COUNT,
-        )
+        if enable_alarms:
+            timeouts_metric_filter = logs.MetricFilter(
+                scope,
+                _id + "TimeoutsMetricFilter",
+                log_group=log_group,
+                filter_pattern=logs.FilterPattern.literal('"Task timed out"'),
+                metric_name="Timeouts",
+                metric_namespace=_id,
+                metric_value="1",
+                default_value=0,
+                unit=cloudwatch.Unit.COUNT,
+            )
 
-        throttles_alarm = cloudwatch.Alarm(
-            scope,
-            _id + "Throttles",
-            metric=self.lambda_function.metric_throttles(),
-            evaluation_periods=1,
-            threshold=0,
-            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
-            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
-        )
+            throttles_alarm = cloudwatch.Alarm(
+                scope,
+                _id + "Throttles",
+                metric=self.lambda_function.metric_throttles(),
+                evaluation_periods=1,
+                threshold=0,
+                comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+                treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
+            )
 
-        errors_alarm = cloudwatch.Alarm(
-            scope,
-            _id + "Errors",
-            metric=self.lambda_function.metric_errors(),
-            evaluation_periods=1,
-            threshold=0,
-            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
-            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
-        )
+            errors_alarm = cloudwatch.Alarm(
+                scope,
+                _id + "Errors",
+                metric=self.lambda_function.metric_errors(),
+                evaluation_periods=1,
+                threshold=0,
+                comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+                treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
+            )
 
-        timeouts_alarm = cloudwatch.Alarm(
-            scope,
-            _id + "Timeouts",
-            metric=timeouts_metric_filter.metric(statistic=cloudwatch.Stats.SUM),
-            evaluation_periods=1,
-            threshold=0,
-            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
-            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
-        )
+            timeouts_alarm = cloudwatch.Alarm(
+                scope,
+                _id + "Timeouts",
+                metric=timeouts_metric_filter.metric(statistic=cloudwatch.Stats.SUM),
+                evaluation_periods=1,
+                threshold=0,
+                comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+                treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
+            )
 
-        if alarm_topic is not None:
-            throttles_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
-            errors_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
-            timeouts_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
+            if alarm_topic is not None:
+                throttles_alarm.add_alarm_action(
+                    cloudwatch_actions.SnsAction(alarm_topic)
+                )
+                errors_alarm.add_alarm_action(cloudwatch_actions.SnsAction(alarm_topic))
+                timeouts_alarm.add_alarm_action(
+                    cloudwatch_actions.SnsAction(alarm_topic)
+                )

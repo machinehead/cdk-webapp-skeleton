@@ -593,12 +593,6 @@
           }),
           'Environment': dict({
             'Variables': dict({
-              'AWS_CODEGURU_PROFILER_GROUP_ARN': dict({
-                'Fn::GetAtt': list([
-                  'ProdWebappLambdaProfilingGroup0EA8A948',
-                  'Arn',
-                ]),
-              }),
               'RUNNING_IN_AWS': 'true',
             }),
           }),
@@ -651,13 +645,6 @@
         'Type': 'AWS::Logs::LogGroup',
         'UpdateReplacePolicy': 'Delete',
       }),
-      'ProdWebappLambdaProfilingGroup0EA8A948': dict({
-        'Properties': dict({
-          'ComputePlatform': 'AWSLambda',
-          'ProfilingGroupName': 'ProdWebappLambdaProfilingGroup',
-        }),
-        'Type': 'AWS::CodeGuruProfiler::ProfilingGroup',
-      }),
       'ProdWebappLambdaServiceRole0CFEC941': dict({
         'Properties': dict({
           'AssumeRolePolicyDocument': dict({
@@ -700,19 +687,6 @@
                 ]),
                 'Effect': 'Allow',
                 'Resource': '*',
-              }),
-              dict({
-                'Action': list([
-                  'codeguru-profiler:ConfigureAgent',
-                  'codeguru-profiler:PostAgentProfile',
-                ]),
-                'Effect': 'Allow',
-                'Resource': dict({
-                  'Fn::GetAtt': list([
-                    'ProdWebappLambdaProfilingGroup0EA8A948',
-                    'Arn',
-                  ]),
-                }),
               }),
             ]),
             'Version': '2012-10-17',

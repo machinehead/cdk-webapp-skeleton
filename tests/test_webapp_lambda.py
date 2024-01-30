@@ -19,6 +19,8 @@ class WebappLambdaTestStack(cdk.Stack):
                 directory="tests/lambda_image"
             ),
             timeout=cdk.Duration.seconds(4),
+            enable_profiling=False,
+            enable_alarms=True,
         )
 
 

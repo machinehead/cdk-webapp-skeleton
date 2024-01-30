@@ -33,6 +33,8 @@ class WebappLambda(Construct):
         *,
         timeout: Optional[cdk.Duration] = None,
         vpc: Optional[ec2.IVpc] = None,
+        enable_profiling: bool = True,
+        enable_alarms: bool = True,
     ):
         """
 
@@ -81,6 +83,8 @@ class WebappLambda(Construct):
             alarm_topic=alarm_topic,
             timeout=timeout,
             vpc=vpc,
+            enable_profiling=enable_profiling,
+            enable_alarms=enable_alarms,
         )
         self.webapp_lambda_func = self.monitored_lambda.lambda_function
 

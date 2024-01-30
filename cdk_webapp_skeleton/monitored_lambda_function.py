@@ -53,12 +53,19 @@ class MonitoredLambdaFunction(Construct):
             }
         )
 
+        log_group = logs.LogGroup(
+            scope,
+            _id + "LogGroup",
+            retention=logs.RetentionDays.TWO_WEEKS,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
+        )
+
         self.lambda_function = _lambda.DockerImageFunction(
             scope,
             _id,
             code=code,
             environment=lambda_runtime_environment,
-            log_retention=logs.RetentionDays.TWO_WEEKS,
+            log_group=log_group,
             memory_size=memory_size,
             tracing=_lambda.Tracing.ACTIVE,
             timeout=timeout,

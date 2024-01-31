@@ -1,3 +1,20 @@
+## v0.7.0 (2024-01-30)
+
+### Feat
+
+- **MonitoredLambdaFunction**: add ability to explicitly disable/enable profiling and alarms
+- **WebappLambda**: allow specifying the VPC as a parameter
+- **AuthStack**: add creating a Google Identity Provider
+
+### Fix
+
+- **MonitoredLambdaFunction**: remove log_retention and migrate to explicitly specifying log group
+- **AuthStack**: provide access to Google's email and openid
+- **WebappLambda**: fix typing to be compatible with python 3.8
+- **MonitoredLambdaFunction**: fix typing to be compatible with python 3.8
+- **MonitoredLambdaFunction**: set the RUNNING_IN_AWS=true env var
+- **BranchCICDPipeline**: allow the Synth step to perform elasticloadbalancing:DescribeRules
+
 ## v0.6.0 (2023-09-10)
 
 ### Feat

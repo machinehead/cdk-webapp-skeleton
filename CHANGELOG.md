@@ -1,3 +1,9 @@
+## v0.7.1 (2024-03-23)
+
+### Fix
+
+- **react_website**: change Content-Security-Policy to add script-src 'unsafe-eval'
+
 ## v0.7.0 (2024-01-30)
 
 ### Feat

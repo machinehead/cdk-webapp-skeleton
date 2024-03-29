@@ -87,3 +87,8 @@ class BranchConfig(ABC):
     def google_client_secret(self) -> Optional[str]:
         """Secret for Google OAuth."""
         return None
+
+    @property
+    def dev_signin_redirect_url(self) -> Optional[str]:
+        """URL to redirect to after signing in during development."""
+        return "http://localhost:3000/signin"

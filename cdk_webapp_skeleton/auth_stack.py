@@ -39,7 +39,7 @@ class AuthStack(cdk.Stack):
         else:
             user_pool = self.find_user_pool()
 
-        development_signin_url = "http://localhost:3000/signin"
+        development_signin_url = branch_config.dev_signin_redirect_url
         production_signin_url = f"https://{branch_config.domain_name}/signin"
 
         frontend_pool_client = user_pool.add_client(

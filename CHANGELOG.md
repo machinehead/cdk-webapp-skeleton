@@ -1,3 +1,9 @@
+## v0.8.0 (2024-03-31)
+
+### Feat
+
+- **branch_config**: make dev signin URL configurable
+
 ## v0.7.1 (2024-03-23)
 
 ### Fix

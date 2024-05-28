@@ -1,7 +1,7 @@
 import abc
 import warnings
 from abc import ABC
-from typing import Optional
+from typing import List, Optional
 
 from aws_cdk import aws_route53 as route53
 from aws_cdk import pipelines as pipelines
@@ -102,5 +102,5 @@ class BranchConfig(ABC):
         return HTTP_LOCALHOST_SIGNIN
 
     @property
-    def signin_redirect_urls(self) -> list[str]:
+    def signin_redirect_urls(self) -> List[str]:
         return [HTTP_LOCALHOST_SIGNIN, f"https://{self.domain_name}/signin"]

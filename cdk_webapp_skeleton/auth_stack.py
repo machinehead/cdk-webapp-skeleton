@@ -39,14 +39,11 @@ class AuthStack(cdk.Stack):
         else:
             user_pool = self.find_user_pool()
 
-        development_signin_url = branch_config.dev_signin_redirect_url
-        production_signin_url = f"https://{branch_config.domain_name}/signin"
-
         frontend_pool_client = user_pool.add_client(
             "app-client",
             generate_secret=False,
             o_auth=cognito.OAuthSettings(
-                callback_urls=[development_signin_url, production_signin_url]
+                callback_urls=branch_config.signin_redirect_urls
             ),
             access_token_validity=cdk.Duration.days(1),
             refresh_token_validity=cdk.Duration.days(30),

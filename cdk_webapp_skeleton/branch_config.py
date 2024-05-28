@@ -1,10 +1,13 @@
 import abc
+import warnings
 from abc import ABC
 from typing import Optional
 
 from aws_cdk import aws_route53 as route53
 from aws_cdk import pipelines as pipelines
 from constructs import Construct
+
+HTTP_LOCALHOST_SIGNIN = "http://localhost:3000/signin"
 
 
 class BranchConfig(ABC):
@@ -91,4 +94,13 @@ class BranchConfig(ABC):
     @property
     def dev_signin_redirect_url(self) -> Optional[str]:
         """URL to redirect to after signing in during development."""
-        return "http://localhost:3000/signin"
+        warnings.warn(
+            "dev_signin_redirect_url will be deprecated in favor of overriding signin_redirect_urls",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+        return HTTP_LOCALHOST_SIGNIN
+
+    @property
+    def signin_redirect_urls(self) -> list[str]:
+        return [HTTP_LOCALHOST_SIGNIN, f"https://{self.domain_name}/signin"]

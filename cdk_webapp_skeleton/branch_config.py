@@ -103,4 +103,4 @@ class BranchConfig(ABC):
 
     @property
     def signin_redirect_urls(self) -> List[str]:
-        return [HTTP_LOCALHOST_SIGNIN, f"https://{self.domain_name}/signin"]
+        return [self.dev_signin_redirect_url, f"https://{self.domain_name}/signin"]

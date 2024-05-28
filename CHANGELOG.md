@@ -1,3 +1,13 @@
+## v0.9.0 (2024-05-27)
+
+### Feat
+
+- **branch_config**: deprecate dev_signin_redirect_url and add signin_redirect_urls to allow for an arbitrary number of redirect URLs
+
+### Fix
+
+- **branch_config**: try py3.8-compatible list typing
+
 ## v0.8.0 (2024-03-31)
 
 ### Feat

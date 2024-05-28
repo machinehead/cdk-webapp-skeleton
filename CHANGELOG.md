@@ -1,3 +1,9 @@
+## v0.9.1 (2024-05-27)
+
+### Fix
+
+- **branch_config**: use the to-be-deprecated property for redirect urls
+
 ## v0.9.0 (2024-05-27)
 
 ### Feat

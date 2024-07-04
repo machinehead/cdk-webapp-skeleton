@@ -4,6 +4,7 @@ on:
     secrets:
       CODECOV_TOKEN:
         required: true
+  push:
 
 jobs:
   install-and-test:
@@ -51,6 +52,7 @@ jobs:
       - name: Build package
         run: poetry build
       - name: 'Upload Build'
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
           name: dist

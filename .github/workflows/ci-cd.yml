@@ -4,6 +4,7 @@ on:
     secrets:
       CODECOV_TOKEN:
         required: true
+  push:
 
 jobs:
   install-and-test:
@@ -38,7 +39,7 @@ jobs:
           path: .venv
           key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        if: steps.cached-venv.outputs.cache-hit != 'true'
+        # if: steps.cached-venv.outputs.cache-hit != 'true'
         run: poetry install --no-root
       - name: Run tests
         run: poetry run pytest
@@ -51,6 +52,7 @@ jobs:
       - name: Build package
         run: poetry build
       - name: 'Upload Build'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_call'
         uses: actions/upload-artifact@v3
         with:
           name: dist

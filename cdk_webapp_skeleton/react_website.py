@@ -44,7 +44,7 @@ class ReactWebsite(Construct):
             security_headers_behavior=cloudfront.ResponseSecurityHeadersBehavior(
                 content_security_policy=cloudfront.ResponseHeadersContentSecurityPolicy(
                     content_security_policy="default-src 'self'; img-src 'self' https: data: ; "
-                    "script-src 'self' https: 'unsafe-eval'; "
+                    "script-src 'self' https: 'unsafe-eval' 'unsafe-inline'; "
                     "style-src 'self' 'unsafe-inline' https: ; font-src 'self' data:; "
                     f"object-src 'none'; connect-src 'self' *.{branch_config.domain_name} "
                     f"cognito-idp.us-east-1.amazonaws.com {branch_config.auth_domain_name}",

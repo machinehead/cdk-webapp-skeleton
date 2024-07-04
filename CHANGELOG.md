@@ -1,3 +1,9 @@
+## v0.9.2 (2024-07-04)
+
+### Fix
+
+- **react_website**: add 'unsafe-inline' to script-src in CloudFront's CSP
+
 ## v0.9.1 (2024-05-27)
 
 ### Fix

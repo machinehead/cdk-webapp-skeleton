@@ -1,3 +1,9 @@
+## v0.9.3 (2024-07-14)
+
+### Fix
+
+- **react_website**: add '*.sentry.io' to 'connect-src' in CloudFront's CSP to enable Sentry
+
 ## v0.9.2 (2024-07-04)
 
 ### Fix

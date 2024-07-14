@@ -47,7 +47,8 @@ class ReactWebsite(Construct):
                     "script-src 'self' https: 'unsafe-eval' 'unsafe-inline'; "
                     "style-src 'self' 'unsafe-inline' https: ; font-src 'self' data:; "
                     f"object-src 'none'; connect-src 'self' *.{branch_config.domain_name} "
-                    f"cognito-idp.us-east-1.amazonaws.com {branch_config.auth_domain_name} *.sentry.io",
+                    f"cognito-idp.us-east-1.amazonaws.com {branch_config.auth_domain_name} *.sentry.io; "
+                    "worker-src blob: ; ",
                     override=True,
                 )
             ),

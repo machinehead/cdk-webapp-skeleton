@@ -1,3 +1,9 @@
+## v0.9.4 (2024-07-14)
+
+### Fix
+
+- **react_website**: add 'blob:' to 'worker-src' in CloudFront's CSP to enable Sentry
+
 ## v0.9.3 (2024-07-14)
 
 ### Fix

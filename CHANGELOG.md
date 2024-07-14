@@ -1,3 +1,9 @@
+## v0.9.5 (2024-07-14)
+
+### Fix
+
+- **react_website**: fix typo in 'worker-src' in CloudFront's CSP
+
 ## v0.9.4 (2024-07-14)
 
 ### Fix

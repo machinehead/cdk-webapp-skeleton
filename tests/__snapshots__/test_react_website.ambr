@@ -311,6 +311,9 @@
               'Value': 'true',
             }),
           ]),
+          'WebsiteConfiguration': dict({
+            'IndexDocument': 'index.html',
+          }),
         }),
         'Type': 'AWS::S3::Bucket',
         'UpdateReplacePolicy': 'Delete',

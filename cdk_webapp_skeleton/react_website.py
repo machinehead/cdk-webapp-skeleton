@@ -1,8 +1,9 @@
-from typing import Mapping, Optional, Sequence
+from typing import Mapping, Optional, Sequence, cast
 
 import aws_cdk as cdk
 from aws_cdk import aws_cloudfront as cloudfront
 from aws_cdk import aws_iam as iam
+from aws_cdk import aws_s3 as s3
 from aws_cdk import aws_ssm as ssm
 from aws_cdk import pipelines
 from cloudcomponents.cdk_static_website import StaticWebsite
@@ -46,13 +47,18 @@ class ReactWebsite(Construct):
                     content_security_policy="default-src 'self'; img-src 'self' https: data: ; "
                     "script-src 'self' https: 'unsafe-eval' 'unsafe-inline'; "
                     "style-src 'self' 'unsafe-inline' https: ; font-src 'self' data:; "
-                    f"object-src 'none'; connect-src 'self' *.{branch_config.domain_name} "
-                    f"cognito-idp.us-east-1.amazonaws.com {branch_config.auth_domain_name} *.sentry.io; "
+                    f"object-src 'none'; connect-src 'self' *.{branch_config.domain_name} "  # noqa: E702
+                    f"cognito-idp.us-east-1.amazonaws.com {branch_config.auth_domain_name} *.sentry.io; "  # noqa: E702
                     "worker-src blob:",
                     override=True,
                 )
             ),
             disable_upload=True,  # deployment is done separately, from the frontend build
+        )
+
+        bucket = cast(s3.CfnBucket, static_website.bucket.node.default_child)
+        bucket.add_property_override(
+            "WebsiteConfiguration", {"IndexDocument": "index.html"}
         )
 
         deploy_role_arn = ssm.StringParameter.value_for_string_parameter(

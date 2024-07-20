@@ -9,7 +9,7 @@ packages = [{include = "cdk_webapp_skeleton"}]
 [tool.poetry.dependencies]
 python = " >=3.8.1,<4"
 aws-cdk-lib = "^2.67.0"
-cloudcomponents-cdk-static-website = "^2.0.0"
+cloudcomponents-cdk-static-website = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"

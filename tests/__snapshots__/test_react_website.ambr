@@ -1,0 +1,800 @@
+# serializer version: 1
+# name: test_react_website
+  dict({
+    'Mappings': dict({
+      'AWSCloudFrontPartitionHostedZoneIdMap': dict({
+        'aws': dict({
+          'zoneId': 'Z2FDTNDATAQYW2',
+        }),
+        'aws-cn': dict({
+          'zoneId': 'Z3RFFRIM2A3IF5',
+        }),
+      }),
+      'LatestNodeRuntimeMap': dict({
+        'af-south-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-east-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-northeast-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-northeast-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-northeast-3': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-south-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-south-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-3': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-4': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-5': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ap-southeast-7': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ca-central-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'ca-west-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'cn-north-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'cn-northwest-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'eu-central-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-central-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-isoe-west-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'eu-north-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-south-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-south-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-west-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-west-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'eu-west-3': dict({
+          'value': 'nodejs20.x',
+        }),
+        'il-central-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'me-central-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'me-south-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'mx-central-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'sa-east-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'us-east-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'us-east-2': dict({
+          'value': 'nodejs20.x',
+        }),
+        'us-gov-east-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'us-gov-west-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'us-iso-east-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'us-iso-west-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'us-isob-east-1': dict({
+          'value': 'nodejs18.x',
+        }),
+        'us-west-1': dict({
+          'value': 'nodejs20.x',
+        }),
+        'us-west-2': dict({
+          'value': 'nodejs20.x',
+        }),
+      }),
+    }),
+    'Outputs': dict({
+      'WebsiteBucketName': dict({
+        'Value': dict({
+          'Ref': 'FrontendBucket5DAC5524',
+        }),
+      }),
+      'WebsiteDistribution': dict({
+        'Value': dict({
+          'Ref': 'FrontendDistributionC0C89627',
+        }),
+      }),
+    }),
+    'Parameters': dict({
+      'BootstrapVersion': dict({
+        'Default': '/cdk-bootstrap/hnb659fds/version',
+        'Description': 'Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]',
+        'Type': 'AWS::SSM::Parameter::Value<String>',
+      }),
+      'SsmParameterValueProdFrontendBundleDeployRoleArnC96584B6F00A464EAD1953AFF4B05118Parameter': dict({
+        'Default': 'ProdFrontendBundleDeployRoleArn',
+        'Type': 'AWS::SSM::Parameter::Value<String>',
+      }),
+    }),
+    'Resources': dict({
+      'BundleDeployRolePolicyEF2AE4AD': dict({
+        'Properties': dict({
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  's3:GetObject*',
+                  's3:GetBucket*',
+                  's3:List*',
+                  's3:DeleteObject*',
+                  's3:PutObject',
+                  's3:PutObjectLegalHold',
+                  's3:PutObjectRetention',
+                  's3:PutObjectTagging',
+                  's3:PutObjectVersionTagging',
+                  's3:Abort*',
+                ]),
+                'Effect': 'Allow',
+                'Resource': list([
+                  dict({
+                    'Fn::GetAtt': list([
+                      'FrontendBucket5DAC5524',
+                      'Arn',
+                    ]),
+                  }),
+                  dict({
+                    'Fn::Join': list([
+                      '',
+                      list([
+                        dict({
+                          'Fn::GetAtt': list([
+                            'FrontendBucket5DAC5524',
+                            'Arn',
+                          ]),
+                        }),
+                        '/*',
+                      ]),
+                    ]),
+                  }),
+                ]),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'PolicyName': 'BundleDeployRolePolicyEF2AE4AD',
+          'Roles': list([
+            dict({
+              'Fn::Select': list([
+                1,
+                dict({
+                  'Fn::Split': list([
+                    '/',
+                    dict({
+                      'Fn::Select': list([
+                        5,
+                        dict({
+                          'Fn::Split': list([
+                            ':',
+                            dict({
+                              'Ref': 'SsmParameterValueProdFrontendBundleDeployRoleArnC96584B6F00A464EAD1953AFF4B05118Parameter',
+                            }),
+                          ]),
+                        }),
+                      ]),
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Policy',
+      }),
+      'CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F': dict({
+        'DependsOn': list([
+          'CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092',
+        ]),
+        'Properties': dict({
+          'Code': dict({
+            'S3Bucket': dict({
+              'Fn::Sub': 'cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}',
+            }),
+            'S3Key': 'faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip',
+          }),
+          'Description': dict({
+            'Fn::Join': list([
+              '',
+              list([
+                'Lambda function for auto-deleting objects in ',
+                dict({
+                  'Ref': 'FrontendBucket5DAC5524',
+                }),
+                ' S3 bucket.',
+              ]),
+            ]),
+          }),
+          'Handler': 'index.handler',
+          'MemorySize': 128,
+          'Role': dict({
+            'Fn::GetAtt': list([
+              'CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092',
+              'Arn',
+            ]),
+          }),
+          'Runtime': dict({
+            'Fn::FindInMap': list([
+              'LatestNodeRuntimeMap',
+              dict({
+                'Ref': 'AWS::Region',
+              }),
+              'value',
+            ]),
+          }),
+          'Timeout': 900,
+        }),
+        'Type': 'AWS::Lambda::Function',
+      }),
+      'CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092': dict({
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'lambda.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'ManagedPolicyArns': list([
+            dict({
+              'Fn::Sub': 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Role',
+      }),
+      'FrontendBucket5DAC5524': dict({
+        'DeletionPolicy': 'Delete',
+        'Properties': dict({
+          'PublicAccessBlockConfiguration': dict({
+            'BlockPublicAcls': True,
+            'BlockPublicPolicy': True,
+            'IgnorePublicAcls': True,
+            'RestrictPublicBuckets': True,
+          }),
+          'Tags': list([
+            dict({
+              'Key': 'aws-cdk:auto-delete-objects',
+              'Value': 'true',
+            }),
+          ]),
+          'WebsiteConfiguration': dict({
+            'IndexDocument': 'index.html',
+          }),
+        }),
+        'Type': 'AWS::S3::Bucket',
+        'UpdateReplacePolicy': 'Delete',
+      }),
+      'FrontendBucketAutoDeleteObjectsCustomResource998765E2': dict({
+        'DeletionPolicy': 'Delete',
+        'DependsOn': list([
+          'FrontendBucketPolicyB05AF112',
+        ]),
+        'Properties': dict({
+          'BucketName': dict({
+            'Ref': 'FrontendBucket5DAC5524',
+          }),
+          'ServiceToken': dict({
+            'Fn::GetAtt': list([
+              'CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F',
+              'Arn',
+            ]),
+          }),
+        }),
+        'Type': 'Custom::S3AutoDeleteObjects',
+        'UpdateReplacePolicy': 'Delete',
+      }),
+      'FrontendBucketPolicyB05AF112': dict({
+        'Properties': dict({
+          'Bucket': dict({
+            'Ref': 'FrontendBucket5DAC5524',
+          }),
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  's3:PutBucketPolicy',
+                  's3:GetBucket*',
+                  's3:List*',
+                  's3:DeleteObject*',
+                ]),
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'AWS': dict({
+                    'Fn::GetAtt': list([
+                      'CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092',
+                      'Arn',
+                    ]),
+                  }),
+                }),
+                'Resource': list([
+                  dict({
+                    'Fn::GetAtt': list([
+                      'FrontendBucket5DAC5524',
+                      'Arn',
+                    ]),
+                  }),
+                  dict({
+                    'Fn::Join': list([
+                      '',
+                      list([
+                        dict({
+                          'Fn::GetAtt': list([
+                            'FrontendBucket5DAC5524',
+                            'Arn',
+                          ]),
+                        }),
+                        '/*',
+                      ]),
+                    ]),
+                  }),
+                ]),
+              }),
+              dict({
+                'Action': 's3:GetObject',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'CanonicalUser': dict({
+                    'Fn::GetAtt': list([
+                      'FrontendDistributionOrigin1S3Origin0C7BC470',
+                      'S3CanonicalUserId',
+                    ]),
+                  }),
+                }),
+                'Resource': dict({
+                  'Fn::Join': list([
+                    '',
+                    list([
+                      dict({
+                        'Fn::GetAtt': list([
+                          'FrontendBucket5DAC5524',
+                          'Arn',
+                        ]),
+                      }),
+                      '/*',
+                    ]),
+                  ]),
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+        }),
+        'Type': 'AWS::S3::BucketPolicy',
+      }),
+      'FrontendCertificateCertificateRequestorFunctionFE685A29': dict({
+        'DependsOn': list([
+          'FrontendCertificateCertificateRequestorFunctionServiceRoleDefaultPolicyCBDA2EAA',
+          'FrontendCertificateCertificateRequestorFunctionServiceRoleE5CDC6F0',
+        ]),
+        'Properties': dict({
+          'Code': dict({
+            'S3Bucket': dict({
+              'Fn::Sub': 'cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}',
+            }),
+            'S3Key': 'b073cebcf4d61fb152a30f5a5e57a94df7f980a549fdf1a79a0b18c5750522d8.zip',
+          }),
+          'Handler': 'index.certificateRequestHandler',
+          'Role': dict({
+            'Fn::GetAtt': list([
+              'FrontendCertificateCertificateRequestorFunctionServiceRoleE5CDC6F0',
+              'Arn',
+            ]),
+          }),
+          'Runtime': dict({
+            'Fn::FindInMap': list([
+              'LatestNodeRuntimeMap',
+              dict({
+                'Ref': 'AWS::Region',
+              }),
+              'value',
+            ]),
+          }),
+          'Timeout': 900,
+        }),
+        'Type': 'AWS::Lambda::Function',
+      }),
+      'FrontendCertificateCertificateRequestorFunctionServiceRoleDefaultPolicyCBDA2EAA': dict({
+        'Properties': dict({
+          'PolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': list([
+                  'acm:RequestCertificate',
+                  'acm:DescribeCertificate',
+                  'acm:DeleteCertificate',
+                  'acm:AddTagsToCertificate',
+                ]),
+                'Effect': 'Allow',
+                'Resource': '*',
+              }),
+              dict({
+                'Action': 'route53:GetChange',
+                'Effect': 'Allow',
+                'Resource': '*',
+              }),
+              dict({
+                'Action': 'route53:changeResourceRecordSets',
+                'Condition': dict({
+                  'ForAllValues:StringEquals': dict({
+                    'route53:ChangeResourceRecordSetsActions': list([
+                      'UPSERT',
+                    ]),
+                    'route53:ChangeResourceRecordSetsRecordTypes': list([
+                      'CNAME',
+                    ]),
+                  }),
+                  'ForAllValues:StringLike': dict({
+                    'route53:ChangeResourceRecordSetsNormalizedRecordNames': list([
+                      '*.testing.com',
+                      '*.testing.com',
+                      '*.www.testing.com',
+                    ]),
+                  }),
+                }),
+                'Effect': 'Allow',
+                'Resource': dict({
+                  'Fn::Join': list([
+                    '',
+                    list([
+                      'arn:',
+                      dict({
+                        'Ref': 'AWS::Partition',
+                      }),
+                      ':route53:::hostedzone/RANDOMHZID',
+                    ]),
+                  ]),
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'PolicyName': 'FrontendCertificateCertificateRequestorFunctionServiceRoleDefaultPolicyCBDA2EAA',
+          'Roles': list([
+            dict({
+              'Ref': 'FrontendCertificateCertificateRequestorFunctionServiceRoleE5CDC6F0',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Policy',
+      }),
+      'FrontendCertificateCertificateRequestorFunctionServiceRoleE5CDC6F0': dict({
+        'Properties': dict({
+          'AssumeRolePolicyDocument': dict({
+            'Statement': list([
+              dict({
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': dict({
+                  'Service': 'lambda.amazonaws.com',
+                }),
+              }),
+            ]),
+            'Version': '2012-10-17',
+          }),
+          'ManagedPolicyArns': list([
+            dict({
+              'Fn::Join': list([
+                '',
+                list([
+                  'arn:',
+                  dict({
+                    'Ref': 'AWS::Partition',
+                  }),
+                  ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                ]),
+              ]),
+            }),
+          ]),
+        }),
+        'Type': 'AWS::IAM::Role',
+      }),
+      'FrontendCertificateCertificateRequestorResource0EC072BF': dict({
+        'DeletionPolicy': 'Delete',
+        'Properties': dict({
+          'DomainName': 'testing.com',
+          'HostedZoneId': 'RANDOMHZID',
+          'Region': 'us-east-1',
+          'ServiceToken': dict({
+            'Fn::GetAtt': list([
+              'FrontendCertificateCertificateRequestorFunctionFE685A29',
+              'Arn',
+            ]),
+          }),
+          'SubjectAlternativeNames': list([
+            'testing.com',
+            'www.testing.com',
+          ]),
+        }),
+        'Type': 'AWS::CloudFormation::CustomResource',
+        'UpdateReplacePolicy': 'Delete',
+      }),
+      'FrontendDistributionC0C89627': dict({
+        'Properties': dict({
+          'DistributionConfig': dict({
+            'Aliases': list([
+              'testing.com',
+              'www.testing.com',
+            ]),
+            'CustomErrorResponses': list([
+              dict({
+                'ErrorCode': 403,
+                'ResponseCode': 200,
+                'ResponsePagePath': '/index.html',
+              }),
+              dict({
+                'ErrorCode': 404,
+                'ResponseCode': 200,
+                'ResponsePagePath': '/index.html',
+              }),
+            ]),
+            'DefaultCacheBehavior': dict({
+              'AllowedMethods': list([
+                'GET',
+                'HEAD',
+              ]),
+              'CachePolicyId': '658327ea-f89d-4fab-a63d-7e88639e58f6',
+              'Compress': True,
+              'ResponseHeadersPolicyId': dict({
+                'Ref': 'FrontendResponseHeadersPolicyB0F64B3D',
+              }),
+              'TargetOriginId': 'FrontendDistributionOrigin1C335E87B',
+              'ViewerProtocolPolicy': 'redirect-to-https',
+            }),
+            'DefaultRootObject': 'index.html',
+            'Enabled': True,
+            'HttpVersion': 'http2',
+            'IPV6Enabled': True,
+            'Origins': list([
+              dict({
+                'DomainName': dict({
+                  'Fn::GetAtt': list([
+                    'FrontendBucket5DAC5524',
+                    'RegionalDomainName',
+                  ]),
+                }),
+                'Id': 'FrontendDistributionOrigin1C335E87B',
+                'S3OriginConfig': dict({
+                  'OriginAccessIdentity': dict({
+                    'Fn::Join': list([
+                      '',
+                      list([
+                        'origin-access-identity/cloudfront/',
+                        dict({
+                          'Ref': 'FrontendDistributionOrigin1S3Origin0C7BC470',
+                        }),
+                      ]),
+                    ]),
+                  }),
+                }),
+              }),
+            ]),
+            'PriceClass': 'PriceClass_100',
+            'ViewerCertificate': dict({
+              'AcmCertificateArn': dict({
+                'Fn::GetAtt': list([
+                  'FrontendCertificateCertificateRequestorResource0EC072BF',
+                  'Arn',
+                ]),
+              }),
+              'MinimumProtocolVersion': 'TLSv1.2_2021',
+              'SslSupportMethod': 'sni-only',
+            }),
+          }),
+        }),
+        'Type': 'AWS::CloudFront::Distribution',
+      }),
+      'FrontendDistributionOrigin1S3Origin0C7BC470': dict({
+        'Properties': dict({
+          'CloudFrontOriginAccessIdentityConfig': dict({
+            'Comment': 'Identity for FrontendDistributionOrigin1C335E87B',
+          }),
+        }),
+        'Type': 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+      }),
+      'FrontendResponseHeadersPolicyB0F64B3D': dict({
+        'Properties': dict({
+          'ResponseHeadersPolicyConfig': dict({
+            'CustomHeadersConfig': dict({
+              'Items': list([
+                dict({
+                  'Header': 'Server',
+                  'Override': True,
+                  'Value': 'Server',
+                }),
+              ]),
+            }),
+            'Name': 'FrontendResponseHeadersPolicyC8869FDF',
+            'SecurityHeadersConfig': dict({
+              'ContentSecurityPolicy': dict({
+                'ContentSecurityPolicy': "default-src 'self'; img-src 'self' https: data: ; script-src 'self' https: 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https: ; font-src 'self' data:; object-src 'none'; connect-src 'self' *.testing.com cognito-idp.us-east-1.amazonaws.com auth.testing.com *.sentry.io; worker-src blob:",
+                'Override': True,
+              }),
+            }),
+          }),
+        }),
+        'Type': 'AWS::CloudFront::ResponseHeadersPolicy',
+      }),
+      'FrontendWebsiteAliasRecordc30946BC2DF2D3': dict({
+        'Properties': dict({
+          'AliasTarget': dict({
+            'DNSName': dict({
+              'Fn::GetAtt': list([
+                'FrontendDistributionC0C89627',
+                'DomainName',
+              ]),
+            }),
+            'HostedZoneId': dict({
+              'Fn::FindInMap': list([
+                'AWSCloudFrontPartitionHostedZoneIdMap',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                'zoneId',
+              ]),
+            }),
+          }),
+          'HostedZoneId': 'RANDOMHZID',
+          'Name': 'www.testing.com.',
+          'Type': 'A',
+        }),
+        'Type': 'AWS::Route53::RecordSet',
+      }),
+      'FrontendWebsiteAliasRecordff4ce07EA40447': dict({
+        'Properties': dict({
+          'AliasTarget': dict({
+            'DNSName': dict({
+              'Fn::GetAtt': list([
+                'FrontendDistributionC0C89627',
+                'DomainName',
+              ]),
+            }),
+            'HostedZoneId': dict({
+              'Fn::FindInMap': list([
+                'AWSCloudFrontPartitionHostedZoneIdMap',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                'zoneId',
+              ]),
+            }),
+          }),
+          'HostedZoneId': 'RANDOMHZID',
+          'Name': 'testing.com.',
+          'Type': 'A',
+        }),
+        'Type': 'AWS::Route53::RecordSet',
+      }),
+      'FrontendWebsiteIPv6AliasRecordc30946396C7CBC': dict({
+        'Properties': dict({
+          'AliasTarget': dict({
+            'DNSName': dict({
+              'Fn::GetAtt': list([
+                'FrontendDistributionC0C89627',
+                'DomainName',
+              ]),
+            }),
+            'HostedZoneId': dict({
+              'Fn::FindInMap': list([
+                'AWSCloudFrontPartitionHostedZoneIdMap',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                'zoneId',
+              ]),
+            }),
+          }),
+          'HostedZoneId': 'RANDOMHZID',
+          'Name': 'www.testing.com.',
+          'Type': 'AAAA',
+        }),
+        'Type': 'AWS::Route53::RecordSet',
+      }),
+      'FrontendWebsiteIPv6AliasRecordff4ce02BFF2C73': dict({
+        'Properties': dict({
+          'AliasTarget': dict({
+            'DNSName': dict({
+              'Fn::GetAtt': list([
+                'FrontendDistributionC0C89627',
+                'DomainName',
+              ]),
+            }),
+            'HostedZoneId': dict({
+              'Fn::FindInMap': list([
+                'AWSCloudFrontPartitionHostedZoneIdMap',
+                dict({
+                  'Ref': 'AWS::Partition',
+                }),
+                'zoneId',
+              ]),
+            }),
+          }),
+          'HostedZoneId': 'RANDOMHZID',
+          'Name': 'testing.com.',
+          'Type': 'AAAA',
+        }),
+        'Type': 'AWS::Route53::RecordSet',
+      }),
+    }),
+    'Rules': dict({
+      'CheckBootstrapVersion': dict({
+        'Assertions': list([
+          dict({
+            'Assert': dict({
+              'Fn::Not': list([
+                dict({
+                  'Fn::Contains': list([
+                    list([
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                    ]),
+                    dict({
+                      'Ref': 'BootstrapVersion',
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+            'AssertDescription': "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---

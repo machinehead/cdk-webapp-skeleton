@@ -64,6 +64,17 @@ class BranchCICDPipeline(Construct):
                     build_image=codebuild.LinuxBuildImage.STANDARD_7_0,
                 ),
                 cache=codebuild.Cache.bucket(cache_bucket),
+                role_policy=[
+                    iam.PolicyStatement(
+                        actions=[
+                            "ecr:GetAuthorizationToken",
+                            "ecr:BatchGetImage",
+                            "ecr:BatchCheckLayerAvailability",
+                            "ecr:GetDownloadUrlForLayer",
+                        ],
+                        resources=["*"],
+                    )
+                ],
             ),
             cross_account_keys=False,
             publish_assets_in_parallel=False,

@@ -1,3 +1,10 @@
+## v0.9.6 (2025-01-03)
+
+### Fix
+
+- **branch_cicd_pipeline**: provide CodeBuild with permissions to pull images from ECR
+- **react_website**: set IndexDocument on WebsiteBucket to index.html
+
 ## v0.9.5 (2024-07-14)
 
 ### Fix

@@ -1,3 +1,9 @@
+## v0.9.9 (2025-01-03)
+
+### Fix
+
+- **branch_cicd_pipeline**: add Docker credentials for ECR repo [skip ci]
+
 ## v0.9.8 (2025-01-03)
 
 ### Fix

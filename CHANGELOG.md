@@ -1,3 +1,9 @@
+## v0.9.8 (2025-01-03)
+
+### Fix
+
+- **branch_cicd_pipeline**: provide CodeBuild with ecr:GetRepositoryPolicy, ecr:ListImages and ecr:DescribeImages permissions [skip ci]
+
 ## v0.9.7 (2025-01-03)
 
 ### Fix

@@ -71,6 +71,7 @@ class BranchCICDPipeline(Construct):
                             "ecr:BatchGetImage",
                             "ecr:BatchCheckLayerAvailability",
                             "ecr:GetDownloadUrlForLayer",
+                            "ecr:DescribeRepositories",
                         ],
                         resources=["*"],
                     )

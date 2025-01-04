@@ -1,3 +1,9 @@
+## v0.9.10 (2025-01-03)
+
+### Fix
+
+- **branch_cicd_pipeline**: set publish_assets_in_parallel=True [skip ci]
+
 ## v0.9.9 (2025-01-03)
 
 ### Fix

@@ -94,7 +94,7 @@ class BranchCICDPipeline(Construct):
                 ],
             ),
             cross_account_keys=False,
-            publish_assets_in_parallel=False,
+            publish_assets_in_parallel=True,
         )
 
         self.alarm_topic = sns.Topic(scope, "AlarmTopic")

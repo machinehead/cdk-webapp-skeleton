@@ -1,6 +1,7 @@
 import aws_cdk as cdk
 from aws_cdk import aws_codebuild as codebuild
 from aws_cdk import aws_codestarnotifications as codestarnotifications
+from aws_cdk import aws_ecr as ecr
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3 as s3
 from aws_cdk import aws_sns as sns
@@ -58,6 +59,18 @@ class BranchCICDPipeline(Construct):
             "Pipeline",  # Pipeline name gets the stack name prepended
             synth=synth_step,
             artifact_bucket=artifact_bucket,
+            docker_credentials=[
+                pipelines.DockerCredential.ecr(
+                    [
+                        ecr.Repository.from_repository_arn(
+                            self,
+                            "Repo",
+                            # TODO: generalize
+                            "arn:aws:ecr:us-east-1:819618805794:repository/docker-hub/ilyanekhay/poetry",
+                        )
+                    ]
+                )
+            ],
             code_build_defaults=pipelines.CodeBuildOptions(
                 build_environment=codebuild.BuildEnvironment(
                     compute_type=codebuild.ComputeType.SMALL,

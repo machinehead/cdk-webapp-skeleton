@@ -1,3 +1,9 @@
+## v0.9.11 (2025-01-25)
+
+### Fix
+
+- **branch_cicd_pipeline**: add ecr:BatchImportUpstreamImage permission for CodeBuild
+
 ## v0.9.10 (2025-01-03)
 
 ### Fix

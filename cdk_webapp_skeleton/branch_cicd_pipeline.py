@@ -88,6 +88,7 @@ class BranchCICDPipeline(Construct):
                             "ecr:GetRepositoryPolicy",
                             "ecr:ListImages",
                             "ecr:DescribeImages",
+                            "ecr:BatchImportUpstreamImage",
                         ],
                         resources=["*"],
                     )

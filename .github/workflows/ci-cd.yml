@@ -22,7 +22,7 @@ jobs:
 
       - name: Load cached Poetry installation
         id: cached-poetry
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.local  # the path depends on the OS
           key: poetry-0  # increment to reset cache
@@ -39,7 +39,7 @@ jobs:
 
       - name: Load cached venv
         id: cached-venv
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
           key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
